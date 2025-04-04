@@ -50,10 +50,10 @@ namespace VanGogRegistration
             titleLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             titleLabel.Font = new Font("Segoe UI", 14F);
             titleLabel.ForeColor = Color.Black;
-            titleLabel.Location = new Point(45, 158);
+            titleLabel.Location = new Point(277, 175);
             titleLabel.Margin = new Padding(4, 0, 4, 0);
             titleLabel.Name = "titleLabel";
-            titleLabel.Size = new Size(1015, 60);
+            titleLabel.Size = new Size(463, 59);
             titleLabel.TabIndex = 1;
             titleLabel.Text = "Введите своё имя и дату рождения для\nрегистрации на платформе \"Van Gog\"";
             titleLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -63,10 +63,10 @@ namespace VanGogRegistration
             nameTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
             nameTextBox.BorderStyle = BorderStyle.None;
             nameTextBox.Font = new Font("Segoe UI", 12F);
-            nameTextBox.Location = new Point(203, 238);
+            nameTextBox.Location = new Point(385, 246);
             nameTextBox.Margin = new Padding(4, 3, 4, 3);
             nameTextBox.Name = "nameTextBox";
-            nameTextBox.Size = new Size(710, 22);
+            nameTextBox.Size = new Size(245, 22);
             nameTextBox.TabIndex = 2;
             // 
             // birthDatePicker
@@ -74,10 +74,10 @@ namespace VanGogRegistration
             birthDatePicker.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
             birthDatePicker.Font = new Font("Segoe UI", 12F);
             birthDatePicker.Format = DateTimePickerFormat.Short;
-            birthDatePicker.Location = new Point(203, 266);
+            birthDatePicker.Location = new Point(385, 274);
             birthDatePicker.Margin = new Padding(4, 3, 4, 3);
             birthDatePicker.Name = "birthDatePicker";
-            birthDatePicker.Size = new Size(710, 29);
+            birthDatePicker.Size = new Size(245, 29);
             birthDatePicker.TabIndex = 3;
             // 
             // photoLabel
@@ -85,10 +85,10 @@ namespace VanGogRegistration
             photoLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             photoLabel.Font = new Font("Segoe UI", 14F);
             photoLabel.ForeColor = Color.Black;
-            photoLabel.Location = new Point(101, 312);
+            photoLabel.Location = new Point(349, 316);
             photoLabel.Margin = new Padding(4, 0, 4, 0);
             photoLabel.Name = "photoLabel";
-            photoLabel.Size = new Size(915, 30);
+            photoLabel.Size = new Size(319, 30);
             photoLabel.TabIndex = 4;
             photoLabel.Text = "Добавьте свою фотографию";
             photoLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -100,7 +100,7 @@ namespace VanGogRegistration
             photoPanel.BackColor = Color.White;
             photoPanel.BorderStyle = BorderStyle.FixedSingle;
             photoPanel.Controls.Add(uploadButton);
-            photoPanel.Location = new Point(388, 360);
+            photoPanel.Location = new Point(349, 364);
             photoPanel.Margin = new Padding(4, 3, 4, 3);
             photoPanel.Name = "photoPanel";
             photoPanel.Size = new Size(319, 319);
@@ -114,10 +114,10 @@ namespace VanGogRegistration
             uploadButton.FlatStyle = FlatStyle.Flat;
             uploadButton.Font = new Font("Segoe UI", 10F);
             uploadButton.ForeColor = Color.Gray;
-            uploadButton.Location = new Point(81, 133);
+            uploadButton.Location = new Point(81, 135);
             uploadButton.Margin = new Padding(4, 3, 4, 3);
             uploadButton.Name = "uploadButton";
-            uploadButton.Size = new Size(155, 47);
+            uploadButton.Size = new Size(151, 44);
             uploadButton.TabIndex = 0;
             uploadButton.Text = "Выбрать фото";
             uploadButton.UseVisualStyleBackColor = false;
@@ -128,15 +128,17 @@ namespace VanGogRegistration
             continueButton.Anchor = AnchorStyles.Bottom;
             continueButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             continueButton.BackColor = Color.FromArgb(169, 106, 132);
+            continueButton.Cursor = Cursors.Hand;
             continueButton.FlatStyle = FlatStyle.Flat;
             continueButton.Font = new Font("Segoe UI", 12F);
             continueButton.ForeColor = Color.White;
-            continueButton.Location = new Point(320, 708);
+            continueButton.Location = new Point(415, 714);
             continueButton.Margin = new Padding(4, 3, 4, 3);
             continueButton.Name = "continueButton";
-            continueButton.Size = new Size(469, 44);
+            continueButton.Size = new Size(190, 44);
             continueButton.TabIndex = 6;
             continueButton.Text = "Продолжить";
+            continueButton.TextImageRelation = TextImageRelation.TextAboveImage;
             continueButton.UseVisualStyleBackColor = false;
             continueButton.Click += continueButton_Click;
             // 
@@ -144,11 +146,11 @@ namespace VanGogRegistration
             // 
             logoBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             logoBox.BackColor = Color.Transparent;
-            logoBox.Image = Van_Gog.Properties.Resources.Logo;
-            logoBox.Location = new Point(228, 21);
+            logoBox.Image = VanGog.Properties.Resources.Logo;
+            logoBox.Location = new Point(431, 12);
             logoBox.Margin = new Padding(4, 3, 4, 3);
             logoBox.Name = "logoBox";
-            logoBox.Size = new Size(643, 117);
+            logoBox.Size = new Size(151, 152);
             logoBox.SizeMode = PictureBoxSizeMode.Zoom;
             logoBox.TabIndex = 0;
             logoBox.TabStop = false;
@@ -157,8 +159,8 @@ namespace VanGogRegistration
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(248, 230, 230);
-            ClientSize = new Size(1099, 786);
+            BackColor = Color.FromArgb(192, 176, 176);
+            ClientSize = new Size(999, 786);
             Controls.Add(logoBox);
             Controls.Add(titleLabel);
             Controls.Add(nameTextBox);
@@ -166,9 +168,10 @@ namespace VanGogRegistration
             Controls.Add(photoLabel);
             Controls.Add(photoPanel);
             Controls.Add(continueButton);
+            Cursor = Cursors.Hand;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(4, 3, 4, 3);
-            MinimumSize = new Size(1115, 825);
+            MinimumSize = new Size(1015, 825);
             Name = "RegistrationForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Van Gog Registration";

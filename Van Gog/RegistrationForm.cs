@@ -82,6 +82,18 @@ namespace VanGogRegistration
                 MessageBox.Show("Пожалуйста, введите ваше имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            
+            if (!nameTextBox.Text.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
+            {
+                MessageBox.Show("Имя должно содержать только буквы.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(nameTextBox.Text))
+            {
+                MessageBox.Show("Пожалуйста, введите ваше имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             if (birthDatePicker.Value > DateTime.Now)
             {

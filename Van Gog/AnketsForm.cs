@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-//using VanGog.Properties;
+using VanGog.Properties;
 
 namespace VanGog
 {
@@ -61,17 +61,17 @@ namespace VanGog
             switch (currentEvent.Topic)
             {
                 case "Свидание в темноте":
-                    //eventPictureBox.Image = Properties.Resources.date1;
+                    eventPictureBox.Image = Properties.Resources.date1;
                     break;
                 case "Свидание на воздушном шаре":
-                    //eventPictureBox.Image = Properties.Resources.date2;
+                    eventPictureBox.Image = Properties.Resources.date2;
                     break;
                 case "Свидание на крыше":
-                    //eventPictureBox.Image = Properties.Resources.date3;
+                    eventPictureBox.Image = Properties.Resources.date3;
                     break;
                 default:
                     //если нет подходящего изображения
-                    //eventPictureBox.Image = Properties.Resources.placeholder;
+                    eventPictureBox.Image = Properties.Resources.placeholder;
                     break;
             }
 

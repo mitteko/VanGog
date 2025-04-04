@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnketsForm));
             mainPanel = new Panel();
             descriptionLabel = new Label();
             descriptionTitleLabel = new Label();
@@ -53,20 +54,20 @@
             mainPanel.Controls.Add(topicTitleLabel);
             mainPanel.Controls.Add(eventPictureBox);
             mainPanel.Controls.Add(logoBox);
-            mainPanel.Location = new Point(50, 50);
+            mainPanel.Location = new Point(247, 56);
             mainPanel.Margin = new Padding(4, 3, 4, 3);
             mainPanel.Name = "mainPanel";
-            mainPanel.Size = new Size(999, 636);
+            mainPanel.Size = new Size(502, 604);
             mainPanel.TabIndex = 0;
             // 
             // descriptionLabel
             // 
             descriptionLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             descriptionLabel.Font = new Font("Segoe UI", 10F);
-            descriptionLabel.Location = new Point(146, 484);
+            descriptionLabel.Location = new Point(146, 458);
             descriptionLabel.Margin = new Padding(4, 0, 4, 0);
             descriptionLabel.Name = "descriptionLabel";
-            descriptionLabel.Size = new Size(609, 69);
+            descriptionLabel.Size = new Size(333, 69);
             descriptionLabel.TabIndex = 5;
             descriptionLabel.Text = "Описание события будет здесь";
             // 
@@ -74,7 +75,7 @@
             // 
             descriptionTitleLabel.AutoSize = true;
             descriptionTitleLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            descriptionTitleLabel.Location = new Point(37, 484);
+            descriptionTitleLabel.Location = new Point(37, 458);
             descriptionTitleLabel.Margin = new Padding(4, 0, 4, 0);
             descriptionTitleLabel.Name = "descriptionTitleLabel";
             descriptionTitleLabel.Size = new Size(83, 19);
@@ -88,7 +89,7 @@
             topicLabel.Location = new Point(146, 409);
             topicLabel.Margin = new Padding(4, 0, 4, 0);
             topicLabel.Name = "topicLabel";
-            topicLabel.Size = new Size(609, 35);
+            topicLabel.Size = new Size(333, 35);
             topicLabel.TabIndex = 3;
             topicLabel.Text = "Тематика события будет здесь";
             // 
@@ -107,18 +108,18 @@
             // 
             eventPictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             eventPictureBox.BackColor = Color.FromArgb(248, 230, 230);
-            eventPictureBox.Image = Van_Gog.Properties.Resources.date1;
-            eventPictureBox.Location = new Point(150, 20);
+            eventPictureBox.Image = (Image)resources.GetObject("eventPictureBox.Image");
+            eventPictureBox.Location = new Point(146, 20);
             eventPictureBox.Margin = new Padding(4, 3, 4, 3);
             eventPictureBox.Name = "eventPictureBox";
-            eventPictureBox.Size = new Size(829, 339);
+            eventPictureBox.Size = new Size(333, 339);
             eventPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             eventPictureBox.TabIndex = 1;
             eventPictureBox.TabStop = false;
             // 
             // logoBox
             // 
-            logoBox.Image = Van_Gog.Properties.Resources.Logo;
+            logoBox.Image = (Image)resources.GetObject("logoBox.Image");
             logoBox.Location = new Point(20, 20);
             logoBox.Margin = new Padding(4, 3, 4, 3);
             logoBox.Name = "logoBox";
@@ -134,7 +135,7 @@
             myEventsButton.FlatAppearance.BorderSize = 0;
             myEventsButton.FlatStyle = FlatStyle.Flat;
             myEventsButton.Font = new Font("Segoe UI", 10F, FontStyle.Underline);
-            myEventsButton.Location = new Point(938, 12);
+            myEventsButton.Location = new Point(848, 12);
             myEventsButton.Margin = new Padding(4, 3, 4, 3);
             myEventsButton.Name = "myEventsButton";
             myEventsButton.Size = new Size(138, 32);
@@ -150,7 +151,7 @@
             declineButton.FlatStyle = FlatStyle.Flat;
             declineButton.Font = new Font("Segoe UI", 12F);
             declineButton.ForeColor = Color.Black;
-            declineButton.Location = new Point(299, 706);
+            declineButton.Location = new Point(247, 694);
             declineButton.Margin = new Padding(4, 3, 4, 3);
             declineButton.Name = "declineButton";
             declineButton.Size = new Size(200, 50);
@@ -166,7 +167,7 @@
             signUpButton.FlatStyle = FlatStyle.Flat;
             signUpButton.Font = new Font("Segoe UI", 12F);
             signUpButton.ForeColor = Color.White;
-            signUpButton.Location = new Point(599, 706);
+            signUpButton.Location = new Point(549, 694);
             signUpButton.Margin = new Padding(4, 3, 4, 3);
             signUpButton.Name = "signUpButton";
             signUpButton.Size = new Size(200, 50);
@@ -179,15 +180,15 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(248, 230, 230);
-            ClientSize = new Size(1099, 786);
+            BackColor = Color.FromArgb(192, 176, 176);
+            ClientSize = new Size(999, 786);
             Controls.Add(signUpButton);
             Controls.Add(declineButton);
             Controls.Add(myEventsButton);
             Controls.Add(mainPanel);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(4, 3, 4, 3);
-            MinimumSize = new Size(1115, 825);
+            MinimumSize = new Size(1015, 825);
             Name = "AnketsForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Анкеты";
