@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75 d17.13
+VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Van Gog", "Van Gog\Van Gog.csproj", "{285F847B-9B9F-41B2-B005-3B0F38641D05}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanGog", "Van Gog\VanGog.csproj", "{285F847B-9B9F-41B2-B005-3B0F38641D05}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1C4C4632-3E88-4E54-A81E-345D7E27287D} = {1C4C4632-3E88-4E54-A81E-345D7E27287D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanGog.Storage", "VanGog.Storage\VanGog.Storage.csproj", "{1C4C4632-3E88-4E54-A81E-345D7E27287D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{285F847B-9B9F-41B2-B005-3B0F38641D05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{285F847B-9B9F-41B2-B005-3B0F38641D05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{285F847B-9B9F-41B2-B005-3B0F38641D05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C4C4632-3E88-4E54-A81E-345D7E27287D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C4C4632-3E88-4E54-A81E-345D7E27287D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C4C4632-3E88-4E54-A81E-345D7E27287D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C4C4632-3E88-4E54-A81E-345D7E27287D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

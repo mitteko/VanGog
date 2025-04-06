@@ -33,6 +33,7 @@ namespace VanGogRegistration
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegistrationForm));
             titleLabel = new Label();
             nameTextBox = new TextBox();
             birthDatePicker = new DateTimePicker();
@@ -146,7 +147,7 @@ namespace VanGogRegistration
             // 
             logoBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             logoBox.BackColor = Color.Transparent;
-            logoBox.Image = VanGog.Properties.Resources.Logo;
+            logoBox.Image = (Image)resources.GetObject("logoBox.Image");
             logoBox.Location = new Point(431, 12);
             logoBox.Margin = new Padding(4, 3, 4, 3);
             logoBox.Name = "logoBox";
@@ -174,7 +175,7 @@ namespace VanGogRegistration
             MinimumSize = new Size(1015, 825);
             Name = "RegistrationForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Van Gog Registration";
+            Text = "VanGog Registration";
             Load += RegistrationForm_Load;
             photoPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)logoBox).EndInit();
