@@ -89,7 +89,7 @@ namespace VanGogRegistration
                 Title = "123",
                 Description = "123",
                 Date = date,
-                Time = new TimeSpan(18, 30, 0), // 
+                Time = new TimeSpan(18, 30, 0), 
                 Participants = "Иван, Петр, Мария",
                 Category = "IT и технологии",
                 ImagePath = "C:/Images/event_image.jpg"
