@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace VanGog
 {
-    public partial class MyEventsForm: Form
+    public partial class MyEventsForm : Form
     {
         public MyEventsForm()
         {

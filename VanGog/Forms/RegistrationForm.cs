@@ -3,13 +3,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Xml;
 using VanGog;
-
+using VanGog.Storage;
+using VanGog.Storage.Core.Entities;
 namespace VanGogRegistration
 {
     public partial class RegistrationForm : Form
     {
         private string selectedImagePath = string.Empty;
-
+        private readonly VanGogDbContext dbContext;
         public RegistrationForm()
         {
             InitializeComponent();
@@ -17,7 +18,7 @@ namespace VanGogRegistration
             // центрируем кнопку загрузки в панели
             uploadButton.Anchor = AnchorStyles.None;
             CenterControlInPanel(uploadButton, photoPanel);
-
+            dbContext = new VanGogDbContext();
             // обработчик изменения размера панели для центрирования кнопки "выбрать"
             photoPanel.Resize += (s, e) => CenterControlInPanel(uploadButton, photoPanel);
         }
@@ -77,6 +78,24 @@ namespace VanGogRegistration
 
         private void continueButton_Click(object sender, EventArgs e)
         {
+            DateTime date = new DateTime(2023, 11, 15);
+            if (date.Kind == DateTimeKind.Unspecified)
+            {
+                date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
+            }
+
+            var Event = new Event
+            {
+                Title = "123",
+                Description = "123",
+                Date = date,
+                Time = new TimeSpan(18, 30, 0), // 
+                Participants = "Иван, Петр, Мария",
+                Category = "IT и технологии",
+                ImagePath = "C:/Images/event_image.jpg"
+            };
+            dbContext.Events.Add(Event);
+            dbContext.SaveChanges();
             if (string.IsNullOrWhiteSpace(nameTextBox.Text))
             {
                 MessageBox.Show("Пожалуйста, введите ваше имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);

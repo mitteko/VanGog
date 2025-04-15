@@ -10,13 +10,20 @@ namespace VanGog.Storage
 
         public VanGogDbContext() { }
         public VanGogDbContext(DbContextOptions<VanGogDbContext> options) : base(options) { }
-
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=vangog-db;User ID=postgres;Password=902692A2006UN951967;");
+                string connectionString = "Host=ep-young-butterfly-a42fdodo-pooler.us-east-1.aws.neon.tech;Database=vangog;Username=vangog_owner;Password=npg_2HSMiq3GIFgn;SSL Mode=Require";
+                optionsBuilder.UseNpgsql(connectionString);
             }
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Event>().ToTable("Events", "public");
+        }
+
     }
 }
