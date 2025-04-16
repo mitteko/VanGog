@@ -48,11 +48,12 @@
             // 
             // titleLabel
             // 
+            titleLabel.Anchor = AnchorStyles.Top;
             titleLabel.AutoSize = true;
             titleLabel.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 204);
-            titleLabel.Location = new Point(83, 22);
+            titleLabel.Location = new Point(92, 23);
             titleLabel.Name = "titleLabel";
-            titleLabel.Size = new Size(327, 25);
+            titleLabel.Size = new Size(327, 22);
             titleLabel.TabIndex = 0;
             titleLabel.Text = "Пожалуйста, введите все данные";
             // 

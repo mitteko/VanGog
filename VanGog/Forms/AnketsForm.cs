@@ -9,7 +9,7 @@ namespace VanGog
         private List<Event> events;
         private int currentEventIndex = 0;
         private VanGogDbContext _dbContext;
-        // Список ID событий, на которые пользователь записался
+        // список ID событий, на которые пользователь записался
         private List<int> subscribedEventIds = new List<int>();
 
         public AnketsForm()
@@ -20,17 +20,18 @@ namespace VanGog
             DisplayCurrentEvent();
         }
 
-
-        // загрузка событий из базы данных
+        // загрузка событий из бд
         private void LoadEventsFromDatabase()
         {
             try
             {
-                _dbContext.Dispose(); // если ты его не переиспользуешь больше
-                _dbContext = new VanGogDbContext(); // пересоздаём
+                if (_dbContext == null)
+                {
+                    _dbContext = new VanGogDbContext();
+                }
+
                 events = _dbContext.Events.ToList();
 
-                // Если в базе нет событий, используем тестовые данные
                 if (events.Count == 0)
                 {
                     InitializeTestEvents();
@@ -38,58 +39,23 @@ namespace VanGog
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при загрузке событий из базы данных: {ex.Message}",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Ошибка при загрузке событий из базы данных: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 InitializeTestEvents();
             }
         }
 
-        // инициализация тестовых данных
-        private void InitializeTestEvents()
+        // инициализация текущего события
+        private void RenderEvent(Event ev)
         {
-            events = new List<Event>
-            {
-                new Event
-                {
-                    EventId = -1, // Отрицательный ID для обозначения тестового события
-                    Title = "Нет доступных событий",
-                    Description = "В данный момент нет доступных событий. Создайте новое событие в разделе 'Мои события'.",
-                    Date = DateTime.UtcNow.AddDays(1),
-                    Time = new TimeSpan(19, 0, 0),
-                    Category = "Информация",
-                    Participants = "",
-                    ImagePath = "" // Будет использоваться изображение-заглушка
-                }
-            };
-        }
-
-        // отображение текущего события
-        private void DisplayCurrentEvent()
-        {
-            if (events.Count == 0 || currentEventIndex >= events.Count)
-            {
-                MessageBox.Show("Больше событий нет.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            if (currentEventIndex >= events.Count)
-            {
-                currentEventIndex = 0; // Начинаем сначала
-                MessageBox.Show("Вы просмотрели все доступные события. Начинаем сначала.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            var currentEvent = events[currentEventIndex];
-
             // установка изображения
             try
             {
-                if (!string.IsNullOrEmpty(currentEvent.ImagePath) && System.IO.File.Exists(currentEvent.ImagePath))
+                if (!string.IsNullOrEmpty(ev.ImagePath) && File.Exists(ev.ImagePath))
                 {
-                    eventPictureBox.Image = Image.FromFile(currentEvent.ImagePath);
+                    eventPictureBox.Image = Image.FromFile(ev.ImagePath);
                 }
                 else
                 {
-                    // Если файл не найден, используем изображение по умолчанию
                     eventPictureBox.Image = Properties.Resources.placeholder;
                 }
             }
@@ -99,27 +65,54 @@ namespace VanGog
             }
 
             // установка текста
-            topicLabel.Text = currentEvent.Title;
-            descriptionLabel.Text = currentEvent.Description;
-
-            // Отображение даты и времени события
-            dateTimeLabel.Text = $"{currentEvent.Date.ToShortDateString()} в {currentEvent.Time.ToString(@"hh\:mm")}";
-
-            // Если это заглушка или пользователь уже записан на это событие, деактивируем кнопку "Записаться"
-            signUpButton.Enabled = currentEvent.EventId > 0;
+            topicLabel.Text = ev.Title;
+            descriptionLabel.Text = ev.Description;
+            dateTimeLabel.Text = $"{ev.Date.ToShortDateString()} в {ev.Time.ToString(@"hh\:mm")}";
+            
+            // активация кнопки "Записаться" (если это не заглушка)
+            signUpButton.Enabled = ev.EventId > 0;
         }
 
-        // Очистка отображения события
-        private void ClearEventDisplay()
+        // отображение текущего события
+        private void DisplayCurrentEvent()
         {
-            eventPictureBox.Image = Properties.Resources.placeholder;
-            topicLabel.Text = "Нет доступных событий";
-            descriptionLabel.Text = "В данный момент нет доступных событий.";
-            dateTimeLabel.Text = "";
-            signUpButton.Enabled = false;
+            if (events.Count == 0)
+            {
+                MessageBox.Show("Ближайших событий нет.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (currentEventIndex >= events.Count)
+            {
+                currentEventIndex = 0; // начинаем сначала
+                MessageBox.Show("Вы просмотрели все доступные события..", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            RenderEvent(events[currentEventIndex]);
         }
 
-        //"Отклонить"
+        // инициализация события если в базе данных нет событий
+        private void InitializeTestEvents()
+        {
+            events = new List<Event>
+            {
+                new Event
+                {
+                    EventId = -1,
+                    Title = "Нет доступных событий",
+                    Description = "В данный момент нет доступных событий. Создайте новое событие в разделе 'Мои события'.",
+                    Date = DateTime.UtcNow.AddDays(1),
+                    Time = new TimeSpan(19, 0, 0),
+                    Category = "Информация",
+                    Participants = "",
+                    ImagePath = ""
+                }
+            };
+
+            RenderEvent(events[0]); // заглушка
+        }
+
+        // "Отклонить"
         private void declineButton_Click(object sender, EventArgs e)
         {
             currentEventIndex++;
@@ -127,47 +120,43 @@ namespace VanGog
             if (currentEventIndex >= events.Count)
             {
                 MessageBox.Show("Вы просмотрели все доступные события.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                currentEventIndex = 0; // Начинаем сначала
+                currentEventIndex = 0; // начинаем сначала
             }
 
             DisplayCurrentEvent();
         }
 
-        //"Записаться"
+        // "Записаться"
         private void signUpButton_Click(object sender, EventArgs e)
         {
-            // Проверяем, что текущий индекс в пределах списка и это не заглушка
+            // проверяем, что текущий индекс в пределах списка и это не заглушка
             if (currentEventIndex < events.Count && events[currentEventIndex].EventId > 0)
             {
                 var currentEvent = events[currentEventIndex];
 
-                // Добавляем текущее событие в "Мои события"
-                if (currentEventIndex < events.Count)
-                {
-                    MessageBox.Show("Вы успешно записались на событие!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                // Добавляем ID события в список подписанных
+                // добавляем ID события в список подписанных
                 if (!subscribedEventIds.Contains(currentEvent.EventId))
                 {
                     subscribedEventIds.Add(currentEvent.EventId);
 
-                    // Сохраняем информацию о подписке в UserSettings или другое хранилище
+                    MessageBox.Show($"Вы успешно записались на событие '{currentEvent.Title}'!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    MessageBox.Show($"Вы успешно записались на событие '{currentEvent.Title}'!",
-                        "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Деактивируем кнопку "Записаться" для этого события
-                    signUpButton.Enabled = false;
+                    currentEventIndex++;
+                    if (currentEventIndex >= events.Count)
+                    {
+                        MessageBox.Show("Вы просмотрели все доступные события.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        currentEventIndex = 0;
+                    }
+                    DisplayCurrentEvent();
                 }
                 else
                 {
-                    MessageBox.Show("Вы уже записаны на это событие.",
-                        "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Вы уже записаны на это событие.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
 
-        //"Мои события"
+        // "Мои события"
         private void myEventsButton_Click(object sender, EventArgs e)
         {
             OpenMyEventsForm();
@@ -175,35 +164,29 @@ namespace VanGog
 
         private void OpenMyEventsForm()
         {
-            // Передаем список ID событий, на которые пользователь подписался
+            // передаем список ID событий, на которые пользователь подписался
             MyEventsForm nextPage = new MyEventsForm(subscribedEventIds);
             nextPage.Size = this.Size;
             nextPage.WindowState = this.WindowState;
             nextPage.StartPosition = FormStartPosition.Manual;
             nextPage.Location = this.Location;
 
-            // Подписываемся на событие возврата из формы MyEventsForm
+            // подписываемся на событие возврата из формы MyEventsForm
             nextPage.ReturnToAnkets += (s, subscribedIds) =>
             {
-                // Обновляем список подписанных событий
+                // обновляем список подписанных событий
                 subscribedEventIds = subscribedIds;
 
-                // Обновляем список событий из базы данных
+                // обновляем список событий из базы данных
                 LoadEventsFromDatabase();
                 DisplayCurrentEvent();
 
-                // Показываем форму анкет
+                // показываем форму анкет
                 this.Show();
             };
 
             this.Hide();
             nextPage.Show();
         }
-
-        private void AnketsForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

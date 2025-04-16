@@ -7,18 +7,25 @@ namespace VanGog
     public partial class MyEventsForm : Form
     {
         private readonly VanGogDbContext _dbContext;
-        private List<Event> _myEvents; // События
+        private List<Event> _myEvents; // события
         private List<int> _subscribedEventIds; // ID событий
         private ContextMenuStrip _contextMenu;
         private Event _selectedEvent;
-
-        // Событие для возврата к форме анкет
-        public event EventHandler<List<int>> ReturnToAnkets;
+        
+        public event EventHandler<List<int>> ReturnToAnkets; // событие для возврата к форме анкет (чтоб синхронизировать события)
 
         public MyEventsForm(List<int> subscribedEventIds = null)
         {
             InitializeComponent();
             _dbContext = new VanGogDbContext();
+            if (subscribedEventIds != null)
+            {
+                _subscribedEventIds = subscribedEventIds;
+            }
+            else
+            {
+                _subscribedEventIds = new List<int>();
+            }
             LoadEvents();
             SetupContextMenu();
         }
@@ -90,12 +97,14 @@ namespace VanGog
             _contextMenu.Items.Add("Удалить", null, DeleteEvent_Click);
         }
 
+        // щелчок ЛКМ
         private void EventPanel_Click(object sender, EventArgs e)
         {
             Panel panel = (Panel)sender;
             _selectedEvent = (Event)panel.Tag;
         }
 
+        // щелчок ПКМ
         private void EventPanel_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -106,6 +115,7 @@ namespace VanGog
             }
         }
 
+        // "Изменить" событие
         private void EditEvent_Click(object sender, EventArgs e)
         {
             if (_selectedEvent != null)
@@ -114,37 +124,37 @@ namespace VanGog
                 editForm.EventSaved += (s, args) =>
                 {
                     LoadEvents();
-                    ReturnToAnkets?.Invoke(this, _subscribedEventIds); // Обновление анкеты
+                    ReturnToAnkets?.Invoke(this, _subscribedEventIds); // обновление анкеты (не обновляется нифига)
                 };
                 editForm.ShowDialog();
             }
         }
 
+        // "Удалить" событие
         private void DeleteEvent_Click(object sender, EventArgs e)
         {
             if (_selectedEvent != null)
             {
-                var result = MessageBox.Show("Вы уверены, что хотите удалить это событие?",
-                    "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = MessageBox.Show("Вы уверены, что хотите удалить это событие?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
                 {
                     try
                     {
-                        // Удаление только из списка подписок, а не из базы данных (??? нужно ли из бд)
+                        // удаление только из списка подписок, а не из базы данных (??? нужно ли из бд)
                         _subscribedEventIds.Remove(_selectedEvent.EventId);
                         _myEvents.Remove(_selectedEvent);
                         DisplayEvents();
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Ошибка при удалении события: {ex.Message}",
-                            "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Ошибка при удалении события: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
         }
 
+        // "Создать событие"
         private void createEventButton_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             createEventButton_Click(sender, e);
@@ -160,39 +170,38 @@ namespace VanGog
             createForm.ShowDialog();
         }
 
+        // "Вернуться к анкетам"
         private void backToAnketsButton_Click(object sender, EventArgs e)
         {
-            // Вызываем событие возврата к форме анкет и передаем список подписанных событий
+            // вызов события возврата к форме анкет. передача списка подписанных событий
             ReturnToAnkets?.Invoke(this, _subscribedEventIds);
-
-            // Скрываем текущую форму (не закрываем, чтобы не вызвать Application.Exit())
             this.Hide();
         }
 
+        // сортировка событий
         private void sortComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (sortComboBox.SelectedIndex)
             {
-                case 0: // По дате (сначала новые)
+                case 0: // по дате (сначала новые)
                     _myEvents = _myEvents.OrderByDescending(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
                     break;
-                case 1: // По дате (сначала старые)
+                case 1: // по дате (сначала старые)
                     _myEvents = _myEvents.OrderBy(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
                     break;
-                case 2: // По названию
+                case 2: // по названию
                     _myEvents = _myEvents.OrderBy(ev => ev.Title).ToList();
                     break;
             }
             DisplayEvents();
         }
 
-        // Переопределяем метод FormClosed, чтобы не вызывать Application.Exit()
+        // переопределение крестика(закрытие)
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             base.OnFormClosed(e);
 
-            // Если форма закрывается, но не через кнопку "Вернуться к анкетам",
-            // вызываем событие ReturnToAnkets
+            // если форма закрывается через крестик вызываем событие ReturnToAnkets
             if (ReturnToAnkets != null && this.Visible)
             {
                 ReturnToAnkets(this, _subscribedEventIds);

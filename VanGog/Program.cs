@@ -14,7 +14,7 @@ namespace VanGog
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Настройка DI и сервисов
+            // настройка DI и сервисов
             var services = ConfigureServices();
             using (var serviceProvider = services.BuildServiceProvider())
             {
@@ -28,8 +28,7 @@ namespace VanGog
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка при запуске приложения: {ex.Message}",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Ошибка при запуске приложения: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -38,7 +37,7 @@ namespace VanGog
         {
             var services = new ServiceCollection();
 
-            // Добавление контекста базы данных
+            // добавление контекста базы данных
             string connectionString = "Host=localhost;Port=5432;Database=vangog-db;User ID=postgres;Password=902692A2006UN951967;"; 
             services.AddDbContextPool<VanGogDbContext>(options =>
             {
@@ -50,14 +49,14 @@ namespace VanGog
                     .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery));
             },50);
 
-            // Добавление логгера
+            // добавление логгера
             services.AddLogging(logging =>
             {
-                logging.AddConsole(); // Логи в консоль
-                logging.SetMinimumLevel(LogLevel.Information); // Уровень логирования
+                logging.AddConsole(); // логи в консоль
+                logging.SetMinimumLevel(LogLevel.Information); // уровень логирования
             });
 
-            // Регистрация формы и инициализатора
+            // регистрация формы и инициализатора
             services.AddTransient<RegistrationForm>();
             services.AddTransient<ApplicationInitializer>();
 

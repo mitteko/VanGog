@@ -175,8 +175,7 @@ namespace VanGogRegistration
             MinimumSize = new Size(1015, 825);
             Name = "RegistrationForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "VanGog Registration";
-            Load += RegistrationForm_Load;
+            Text = "Регистрация";
             photoPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)logoBox).EndInit();
             ResumeLayout(false);

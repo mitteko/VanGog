@@ -43,7 +43,7 @@
             titleLabel.Anchor = AnchorStyles.Top;
             titleLabel.AutoSize = true;
             titleLabel.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 204);
-            titleLabel.Location = new Point(424, 12);
+            titleLabel.Location = new Point(421, 12);
             titleLabel.Name = "titleLabel";
             titleLabel.Size = new Size(172, 32);
             titleLabel.TabIndex = 0;
@@ -117,7 +117,7 @@
             backgroundPanel.Controls.Add(titleLabel);
             backgroundPanel.Location = new Point(0, 0);
             backgroundPanel.Name = "backgroundPanel";
-            backgroundPanel.Size = new Size(1005, 60);
+            backgroundPanel.Size = new Size(999, 60);
             backgroundPanel.TabIndex = 6;
             // 
             // MyEventsForm

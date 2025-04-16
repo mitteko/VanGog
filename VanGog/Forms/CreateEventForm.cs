@@ -10,20 +10,16 @@ namespace VanGog
         private Event _eventToEdit;
         public event EventHandler EventSaved;
 
-        // Конструктор для создания нового события
+        // конструктор 1 для создания нового события
         public CreateEventForm()
         {
             InitializeComponent();
             _dbContext = new VanGogDbContext();
 
-            // Центрируем кнопку загрузки в панели
             uploadButton.Anchor = AnchorStyles.None;
-            CenterControlInPanel(uploadButton, photoPanel);
-
-            // Обработчик изменения размера панели для центрирования кнопки
             photoPanel.Resize += (s, e) => CenterControlInPanel(uploadButton, photoPanel);
 
-            // Заполняем комбобокс категорий
+            // категории (?)
             categoryComboBox.Items.AddRange(new object[] {
                 "Свидание",
                 "Вечеринка",
@@ -34,55 +30,66 @@ namespace VanGog
             });
             categoryComboBox.SelectedIndex = 0;
 
-            // Устанавливаем текущую дату и время
+            // текущая дата и время
             datePicker.Value = DateTime.Now;
-            timePicker.Value = DateTime.Today.AddHours(19); // 19:00 по умолчанию
+            timePicker.Value = DateTime.Today.AddHours(19);
         }
 
-        // Конструктор для редактирования существующего события
+        // конструктор 2 для редактирования существующего события (но что то не то... не работает) ???
         public CreateEventForm(Event eventToEdit) : this()
         {
             _eventToEdit = eventToEdit;
             titleTextBox.Text = eventToEdit.Title;
             descriptionTextBox.Text = eventToEdit.Description;
-
-            // Устанавливаем дату и время из события
+            
+            // установка даты и времени
             if (eventToEdit.Date != DateTime.MinValue)
             {
                 datePicker.Value = eventToEdit.Date.ToLocalTime();
             }
-
             if (eventToEdit.Time != TimeSpan.Zero)
             {
                 timePicker.Value = DateTime.Today.Add(eventToEdit.Time);
             }
 
-            // Выбираем категорию из списка или устанавливаем "Другое"
+            // категория из списка или "Другое"
             int categoryIndex = categoryComboBox.Items.IndexOf(eventToEdit.Category);
             categoryComboBox.SelectedIndex = categoryIndex >= 0 ? categoryIndex : categoryComboBox.Items.Count - 1;
 
-            // Загружаем изображение, если путь существует
+            // !!! надо будет добавить кнопку удалить фотку, чтоб можно было поменять 
             if (!string.IsNullOrEmpty(eventToEdit.ImagePath) && File.Exists(eventToEdit.ImagePath))
             {
                 _selectedImagePath = eventToEdit.ImagePath;
                 DisplayImage(_selectedImagePath);
             }
 
-            // Меняем заголовок и текст кнопки
             this.Text = "Редактирование события";
             titleLabel.Text = "Редактирование события";
-            saveButton.Text = "Сохранить изменения";
         }
 
         private void CenterControlInPanel(Control control, Panel panel)
         {
-            // Центральная позиция относительно панели
             int centerX = (panel.ClientSize.Width - control.Width) / 2;
             int centerY = (panel.ClientSize.Height - control.Height) / 2;
 
             control.Location = new Point(centerX, centerY);
         }
 
+        private void DisplayImage(string imagePath)
+        {
+            photoPanel.Controls.Clear();
+
+            PictureBox pictureBox = new PictureBox
+            {
+                Dock = DockStyle.Fill, // зум картинки на весь пикчр бокс
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Image = Image.FromFile(imagePath)
+            };
+
+            photoPanel.Controls.Add(pictureBox);
+        }
+
+        // "Выбрать изображение"
         private void uploadButton_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -98,24 +105,10 @@ namespace VanGog
             }
         }
 
-        private void DisplayImage(string imagePath)
-        {
-            photoPanel.Controls.Clear();
-
-            PictureBox pictureBox = new PictureBox
-            {
-                Size = photoPanel.Size,
-                Location = new Point(0, 0),
-                SizeMode = PictureBoxSizeMode.Zoom,
-                Image = Image.FromFile(imagePath)
-            };
-
-            photoPanel.Controls.Add(pictureBox);
-        }
-
+        // сохр-е события
         private void saveButton_Click(object sender, EventArgs e)
         {
-            // Проверка заполнения обязательных полей
+            // проверка заполнения обязательных полей
             if (string.IsNullOrWhiteSpace(titleTextBox.Text))
             {
                 MessageBox.Show("Пожалуйста, введите тематику свидания.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -136,42 +129,32 @@ namespace VanGog
 
             try
             {
-                // Создаем или обновляем событие
                 Event eventItem;
 
                 if (_eventToEdit == null)
                 {
-                    // Создаем новое событие
                     eventItem = new Event();
                 }
                 else
                 {
-                    // Обновляем существующее событие
                     eventItem = _eventToEdit;
                 }
 
-                // Заполняем данные события
                 eventItem.Title = titleTextBox.Text;
                 eventItem.Description = descriptionTextBox.Text;
                 eventItem.Date = DateTime.SpecifyKind(datePicker.Value.Date, DateTimeKind.Utc);
                 eventItem.Time = timePicker.Value.TimeOfDay;
                 eventItem.Category = categoryComboBox.SelectedItem.ToString();
                 eventItem.ImagePath = _selectedImagePath;
-                eventItem.Participants = ""; // Можно добавить поле для участников в форму
 
                 if (_eventToEdit == null)
                 {
-                    // Добавляем новое событие в базу данных
-                    _dbContext.Events.Add(eventItem);
+                    _dbContext.Events.Add(eventItem); // добавляем новое событие в бд
                 }
 
-                // Сохраняем изменения в базе данных
                 _dbContext.SaveChanges();
+                EventSaved?.Invoke(this, EventArgs.Empty); // вызываем событие о сохранении
 
-                // Вызываем событие о сохранении
-                EventSaved?.Invoke(this, EventArgs.Empty);
-
-                // Закрываем форму
                 this.Close();
             }
             catch (Exception ex)

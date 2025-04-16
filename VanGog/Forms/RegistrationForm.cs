@@ -100,10 +100,5 @@ namespace VanGogRegistration
             nextPage.FormClosed += (s, args) => Application.Exit();
             nextPage.Show();
         }
-
-        private void RegistrationForm_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

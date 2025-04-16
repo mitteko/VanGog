@@ -93,7 +93,7 @@
             descriptionLabel.Location = new Point(146, 458);
             descriptionLabel.Margin = new Padding(4, 0, 4, 0);
             descriptionLabel.Name = "descriptionLabel";
-            descriptionLabel.Size = new Size(333, 69);
+            descriptionLabel.Size = new Size(333, 50);
             descriptionLabel.TabIndex = 5;
             descriptionLabel.Text = "Описание события будет здесь";
             // 
@@ -218,7 +218,6 @@
             Name = "AnketsForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Анкеты";
-            Load += AnketsForm_Load;
             mainPanel.ResumeLayout(false);
             mainPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)eventPictureBox).EndInit();
