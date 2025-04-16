@@ -1,10 +1,5 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Xml;
-using VanGog;
+﻿using VanGog;
 using VanGog.Storage;
-using VanGog.Storage.Core.Entities;
 namespace VanGogRegistration
 {
     public partial class RegistrationForm : Form
@@ -28,14 +23,6 @@ namespace VanGogRegistration
             // центральная позиция относительно панели
             int centerX = (panel.ClientSize.Width - control.Width) / 2;
             int centerY = (panel.ClientSize.Height - control.Height) / 2;
-
-            control.Location = new Point(centerX, centerY);
-        }
-
-        private void CenterControl(Control control) //центр оносительно оси x, позже расположу элементы четко по центру
-        {
-            int centerX = (control.Parent.ClientSize.Width - control.Width) / 2;
-            int centerY = (control.Parent.ClientSize.Height - control.Height) / 2;
 
             control.Location = new Point(centerX, centerY);
         }
@@ -66,11 +53,6 @@ namespace VanGogRegistration
             }
         }
 
-        private void ContinueRegistration(string name, DateTime birthDate, string photoPath)
-        {
-            // сохранение данных в базе данных или файл
-        }
-
         private void uploadButton_Click(object sender, EventArgs e)
         {
             UploadPhoto(photoPanel);
@@ -78,24 +60,6 @@ namespace VanGogRegistration
 
         private void continueButton_Click(object sender, EventArgs e)
         {
-            DateTime date = new DateTime(2023, 11, 15);
-            if (date.Kind == DateTimeKind.Unspecified)
-            {
-                date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
-            }
-
-            var Event = new Event
-            {
-                Title = "123",
-                Description = "123",
-                Date = date,
-                Time = new TimeSpan(18, 30, 0), 
-                Participants = "Иван, Петр, Мария",
-                Category = "IT и технологии",
-                ImagePath = "C:/Images/event_image.jpg"
-            };
-            dbContext.Events.Add(Event);
-            dbContext.SaveChanges();
             if (string.IsNullOrWhiteSpace(nameTextBox.Text))
             {
                 MessageBox.Show("Пожалуйста, введите ваше имя.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -126,7 +90,6 @@ namespace VanGogRegistration
                 return;
             }
 
-            ContinueRegistration(nameTextBox.Text, birthDatePicker.Value, selectedImagePath);
             AnketsForm nextPage = new AnketsForm();
             nextPage.Size = this.Size;
             nextPage.WindowState = this.WindowState;

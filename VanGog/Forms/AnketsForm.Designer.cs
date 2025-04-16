@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnketsForm));
             mainPanel = new Panel();
+            dateTimeTitleLabel = new Label();
+            dateTimeLabel = new Label();
             descriptionLabel = new Label();
             descriptionTitleLabel = new Label();
             topicLabel = new Label();
@@ -48,6 +50,8 @@
             // 
             mainPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             mainPanel.BackColor = Color.White;
+            mainPanel.Controls.Add(dateTimeTitleLabel);
+            mainPanel.Controls.Add(dateTimeLabel);
             mainPanel.Controls.Add(descriptionLabel);
             mainPanel.Controls.Add(descriptionTitleLabel);
             mainPanel.Controls.Add(topicLabel);
@@ -59,6 +63,28 @@
             mainPanel.Name = "mainPanel";
             mainPanel.Size = new Size(502, 604);
             mainPanel.TabIndex = 0;
+            // 
+            // dateTimeTitleLabel
+            // 
+            dateTimeTitleLabel.AutoSize = true;
+            dateTimeTitleLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dateTimeTitleLabel.Location = new Point(28, 508);
+            dateTimeTitleLabel.Margin = new Padding(4, 0, 4, 0);
+            dateTimeTitleLabel.Name = "dateTimeTitleLabel";
+            dateTimeTitleLabel.Size = new Size(96, 19);
+            dateTimeTitleLabel.TabIndex = 6;
+            dateTimeTitleLabel.Text = "Дата/время:";
+            // 
+            // dateTimeLabel
+            // 
+            dateTimeLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            dateTimeLabel.Font = new Font("Segoe UI", 10F);
+            dateTimeLabel.Location = new Point(146, 508);
+            dateTimeLabel.Margin = new Padding(4, 0, 4, 0);
+            dateTimeLabel.Name = "dateTimeLabel";
+            dateTimeLabel.Size = new Size(333, 19);
+            dateTimeLabel.TabIndex = 7;
+            dateTimeLabel.Text = "01.01.2025 в 19:00";
             // 
             // descriptionLabel
             // 
@@ -75,7 +101,7 @@
             // 
             descriptionTitleLabel.AutoSize = true;
             descriptionTitleLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            descriptionTitleLabel.Location = new Point(37, 458);
+            descriptionTitleLabel.Location = new Point(41, 458);
             descriptionTitleLabel.Margin = new Padding(4, 0, 4, 0);
             descriptionTitleLabel.Name = "descriptionTitleLabel";
             descriptionTitleLabel.Size = new Size(83, 19);
@@ -97,7 +123,7 @@
             // 
             topicTitleLabel.AutoSize = true;
             topicTitleLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            topicTitleLabel.Location = new Point(42, 409);
+            topicTitleLabel.Location = new Point(46, 409);
             topicTitleLabel.Margin = new Padding(4, 0, 4, 0);
             topicTitleLabel.Name = "topicTitleLabel";
             topicTitleLabel.Size = new Size(78, 19);
@@ -120,7 +146,7 @@
             // logoBox
             // 
             logoBox.Image = (Image)resources.GetObject("logoBox.Image");
-            logoBox.Location = new Point(20, 20);
+            logoBox.Location = new Point(24, 20);
             logoBox.Margin = new Padding(4, 3, 4, 3);
             logoBox.Name = "logoBox";
             logoBox.Size = new Size(100, 100);
@@ -134,7 +160,7 @@
             myEventsButton.BackColor = Color.Transparent;
             myEventsButton.FlatAppearance.BorderSize = 0;
             myEventsButton.FlatStyle = FlatStyle.Flat;
-            myEventsButton.Font = new Font("Segoe UI", 10F, FontStyle.Underline);
+            myEventsButton.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 204);
             myEventsButton.Location = new Point(848, 12);
             myEventsButton.Margin = new Padding(4, 3, 4, 3);
             myEventsButton.Name = "myEventsButton";
@@ -203,15 +229,17 @@
 
         #endregion
 
-        private System.Windows.Forms.Panel mainPanel;
-    private System.Windows.Forms.PictureBox logoBox;
-    private System.Windows.Forms.PictureBox eventPictureBox;
-    private System.Windows.Forms.Label topicTitleLabel;
-    private System.Windows.Forms.Label topicLabel;
-    private System.Windows.Forms.Label descriptionTitleLabel;
-    private System.Windows.Forms.Label descriptionLabel;
-    private System.Windows.Forms.Button myEventsButton;
-    private System.Windows.Forms.Button declineButton;
-    private System.Windows.Forms.Button signUpButton;
-}
+        private Panel mainPanel;
+        private PictureBox logoBox;
+        private PictureBox eventPictureBox;
+        private Label topicTitleLabel;
+        private Label topicLabel;
+        private Label descriptionTitleLabel;
+        private Label descriptionLabel;
+        private Button myEventsButton;
+        private Button declineButton;
+        private Button signUpButton;
+        private Label dateTimeTitleLabel;
+        private Label dateTimeLabel;
+    }
 }

@@ -110,11 +110,11 @@ namespace VanGogRegistration
             // uploadButton
             // 
             uploadButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            uploadButton.BackColor = Color.FromArgb(230, 230, 230);
+            uploadButton.BackColor = Color.Gray;
             uploadButton.FlatAppearance.BorderSize = 0;
             uploadButton.FlatStyle = FlatStyle.Flat;
-            uploadButton.Font = new Font("Segoe UI", 10F);
-            uploadButton.ForeColor = Color.Gray;
+            uploadButton.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            uploadButton.ForeColor = Color.White;
             uploadButton.Location = new Point(81, 135);
             uploadButton.Margin = new Padding(4, 3, 4, 3);
             uploadButton.Name = "uploadButton";

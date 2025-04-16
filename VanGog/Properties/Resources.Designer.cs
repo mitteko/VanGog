@@ -63,6 +63,16 @@ namespace VanGog.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _7efc9854e90d13bcb0888b4ee49e97c5 {
+            get {
+                object obj = ResourceManager.GetObject("7efc9854e90d13bcb0888b4ee49e97c5", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap date1 {
             get {
                 object obj = ResourceManager.GetObject("date1", resourceCulture);
