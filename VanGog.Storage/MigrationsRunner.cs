@@ -27,6 +27,25 @@ namespace VanGog.Storage
                     dbContext.Database.ExecuteSqlRaw("ALTER TABLE \"Events\" ADD COLUMN \"CreatorId\" TEXT");
                 }
 
+                // Проверяем, существует ли колонка Participants
+                bool participantsExists = false;
+                try
+                {
+                    // Пробуем выполнить запрос, который использует Participants
+                    dbContext.Database.ExecuteSqlRaw("SELECT \"Participants\" FROM \"Events\" LIMIT 1");
+                    participantsExists = true;
+                }
+                catch
+                {
+                    participantsExists = false;
+                }
+
+                // Если колонка существует, удаляем её
+                if (participantsExists)
+                {
+                    dbContext.Database.ExecuteSqlRaw("ALTER TABLE \"Events\" DROP COLUMN \"Participants\"");
+                }
+
                 // Применяем все миграции
                 dbContext.Database.Migrate();
             }

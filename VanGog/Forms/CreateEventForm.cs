@@ -183,7 +183,6 @@ namespace VanGog
                 eventItem.Time = timePicker.Value.TimeOfDay;
                 eventItem.Category = categoryComboBox.SelectedItem.ToString();
                 eventItem.ImagePath = savedImagePath;
-                eventItem.Participants = string.Empty; // Исправление ошибки с null
 
                 if (_isNewEvent)
                 {

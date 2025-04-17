@@ -49,10 +49,6 @@ namespace VanGog.Storage.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Participants")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("interval");
 

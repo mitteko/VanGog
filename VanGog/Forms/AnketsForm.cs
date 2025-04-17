@@ -104,7 +104,6 @@ namespace VanGog
                     Date = DateTime.UtcNow.AddDays(1),
                     Time = new TimeSpan(19, 0, 0),
                     Category = "Информация",
-                    Participants = string.Empty,
                     ImagePath = string.Empty
                 }
             };

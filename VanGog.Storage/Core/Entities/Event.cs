@@ -15,8 +15,6 @@ public record Event
 
     public TimeSpan Time { get; set; }
 
-    public string Participants { get; set; } = string.Empty;
-
     public string Category { get; set; }
         
     // путь к изображению
