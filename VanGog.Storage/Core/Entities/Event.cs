@@ -1,14 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations;
 namespace VanGog.Storage.Core.Entities;
 
 public record Event
 {
     [Key]
     public int EventId { get; set; }
-
     public string Title { get; set; }
-
     public string Description { get; set; }
 
     public DateTime Date { get; set; }
