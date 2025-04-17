@@ -24,7 +24,7 @@ namespace VanGog
             uploadButton.Anchor = AnchorStyles.None;
             photoPanel.Resize += (s, e) => CenterControlInPanel(uploadButton, photoPanel);
 
-            // категории (?)
+            // категории
             categoryComboBox.Items.AddRange(new object[] {
                 "Свидание",
                 "Вечеринка",
@@ -112,23 +112,23 @@ namespace VanGog
             }
         }
 
-        // Сохранение изображения в папку приложения
+        // сохранение изображения в папку приложения
         private string SaveImageToAppFolder(string sourcePath)
         {
             try
             {
-                // Создаем папку для изображений, если её нет
+                // создаем папку для изображений, если её нет
                 string imagesFolder = Path.Combine(Application.StartupPath, "EventImages");
                 if (!Directory.Exists(imagesFolder))
                 {
                     Directory.CreateDirectory(imagesFolder);
                 }
 
-                // Генерируем уникальное имя файла
+                // генерируем уникальное имя
                 string fileName = $"{Guid.NewGuid()}{Path.GetExtension(sourcePath)}";
                 string destinationPath = Path.Combine(imagesFolder, fileName);
 
-                // Копируем файл
+                // копируем
                 File.Copy(sourcePath, destinationPath, true);
 
                 return destinationPath;
@@ -136,7 +136,7 @@ namespace VanGog
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка при сохранении изображения: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return sourcePath; // Возвращаем исходный путь в случае ошибки
+                return sourcePath; // возвращаем исходный путь в случае ошибки
             }
         }
 
