@@ -16,7 +16,7 @@ public record Event
     {
         get
         {
-            if (Regex.Match(title, "^[а-яА-Я0-9]+$").Success)
+            if (Regex.Match(title, @"^[а-яА-Я\s]+$").Success)
             {
                 if (string.IsNullOrWhiteSpace(title))
                 {

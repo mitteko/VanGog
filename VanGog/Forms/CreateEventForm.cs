@@ -141,12 +141,11 @@ namespace VanGog
         private void saveButton_Click(object sender, EventArgs e)
         {
             // установка свойств с перехватом ошибок
-            if (!Regex.IsMatch(titleTextBox.Text, "^[а-яА-Я]+$"))
+            if (!Regex.IsMatch(titleTextBox.Text, @"^[а-яА-Я\s]+$"))
             {
                 MessageBox.Show("Название может содержать только русские буквы без пробелов.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             if (char.IsWhiteSpace(titleTextBox.Text[0]))
             {
                 MessageBox.Show("Название не должно начинаться с пробела.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
