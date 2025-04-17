@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanGog.Storage", "VanGog.St
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VanGog", "VanGog\VanGog.csproj", "{89C90D93-FA46-E215-E8A2-ADB94D5C466E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestVanGog", "TestVanGog\TestVanGog.csproj", "{AF807BD3-E2A6-4888-A266-D7309D23FB3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{89C90D93-FA46-E215-E8A2-ADB94D5C466E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89C90D93-FA46-E215-E8A2-ADB94D5C466E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89C90D93-FA46-E215-E8A2-ADB94D5C466E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF807BD3-E2A6-4888-A266-D7309D23FB3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF807BD3-E2A6-4888-A266-D7309D23FB3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF807BD3-E2A6-4888-A266-D7309D23FB3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF807BD3-E2A6-4888-A266-D7309D23FB3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
