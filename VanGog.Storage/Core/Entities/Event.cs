@@ -45,28 +45,7 @@ public string Description { get; set; }
 
     public string Participants { get; set; } = string.Empty;
 
-    public string Category
-    {
-        get
-        {
-            if (Regex.Match(category, "^[а-яА-Я]*$").Success)
-            {
-                if (string.IsNullOrWhiteSpace(category))
-                {
-                    throw new ArgumentException("Категория не может быть пустой или содержать только пробелы.");
-                }
-            }
-            else
-            {
-                throw new ArgumentException("Категория не может содержать специальные символы", nameof(Category));
-            }
-            return category;
-        }
-        set
-        {
-            category = value;
-        }
-    }
+    public string Category { get; set; }
         
     // путь к изображению
     public string ImagePath { get; set; }
