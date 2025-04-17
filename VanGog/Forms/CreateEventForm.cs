@@ -9,6 +9,7 @@ namespace VanGog
         private string _selectedImagePath = string.Empty;
         private Event _eventToEdit;
         public event EventHandler EventSaved;
+        private bool _isNewEvent = true;
 
         // конструктор 1 для создания нового события
         public CreateEventForm()
@@ -39,6 +40,8 @@ namespace VanGog
         public CreateEventForm(Event eventToEdit) : this()
         {
             _eventToEdit = eventToEdit;
+            _isNewEvent = false;
+
             titleTextBox.Text = eventToEdit.Title;
             descriptionTextBox.Text = eventToEdit.Description;
             
@@ -92,7 +95,7 @@ namespace VanGog
         // "Выбрать изображение"
         private void uploadButton_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            using (var openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
                 openFileDialog.Title = "Выберите изображение";
@@ -105,25 +108,53 @@ namespace VanGog
             }
         }
 
+        // Сохранение изображения в папку приложения
+        private string SaveImageToAppFolder(string sourcePath)
+        {
+            try
+            {
+                // Создаем папку для изображений, если её нет
+                string imagesFolder = Path.Combine(Application.StartupPath, "EventImages");
+                if (!Directory.Exists(imagesFolder))
+                {
+                    Directory.CreateDirectory(imagesFolder);
+                }
+
+                // Генерируем уникальное имя файла
+                string fileName = $"{Guid.NewGuid()}{Path.GetExtension(sourcePath)}";
+                string destinationPath = Path.Combine(imagesFolder, fileName);
+
+                // Копируем файл
+                File.Copy(sourcePath, destinationPath, true);
+
+                return destinationPath;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении изображения: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return sourcePath; // Возвращаем исходный путь в случае ошибки
+            }
+        }
+
         // сохр-е события
         private void saveButton_Click(object sender, EventArgs e)
         {
             // проверка заполнения обязательных полей
             if (string.IsNullOrWhiteSpace(titleTextBox.Text))
             {
-                MessageBox.Show("Пожалуйста, введите тематику свидания.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Введите тематику свидания.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(descriptionTextBox.Text))
             {
-                MessageBox.Show("Пожалуйста, введите описание свидания.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Введите описание свидания.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_selectedImagePath))
             {
-                MessageBox.Show("Пожалуйста, добавьте фотографию.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Добавьте фотографию.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -131,23 +162,30 @@ namespace VanGog
             {
                 Event eventItem;
 
-                if (_eventToEdit == null)
+                if (_isNewEvent)
                 {
                     eventItem = new Event();
+                    // Сохраняем ID пользователя, создавшего событие
+                    // В данном случае используем уникальный идентификатор компьютера
+                    eventItem.CreatorId = Environment.MachineName;
                 }
                 else
                 {
                     eventItem = _eventToEdit;
                 }
 
+                // Сохраняем изображение в папку приложения
+                string savedImagePath = SaveImageToAppFolder(_selectedImagePath);
+
                 eventItem.Title = titleTextBox.Text;
                 eventItem.Description = descriptionTextBox.Text;
                 eventItem.Date = DateTime.SpecifyKind(datePicker.Value.Date, DateTimeKind.Utc);
                 eventItem.Time = timePicker.Value.TimeOfDay;
                 eventItem.Category = categoryComboBox.SelectedItem.ToString();
-                eventItem.ImagePath = _selectedImagePath;
+                eventItem.ImagePath = savedImagePath;
+                eventItem.Participants = string.Empty; // Исправление ошибки с null
 
-                if (_eventToEdit == null)
+                if (_isNewEvent)
                 {
                     _dbContext.Events.Add(eventItem); // добавляем новое событие в бд
                 }

@@ -14,53 +14,19 @@ namespace VanGog
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // настройка DI и сервисов
-            var services = ConfigureServices();
-            using (var serviceProvider = services.BuildServiceProvider())
+            try
             {
-                try
-                {
-                    var initializer = serviceProvider.GetRequiredService<ApplicationInitializer>();
-                    initializer.StartApplication(serviceProvider);
+                // Инициализация приложения и применение миграций
+                var initializer = new ApplicationInitializer();
+                initializer.StartApplication();
 
-                    var registrationForm = serviceProvider.GetRequiredService<RegistrationForm>();
-                    Application.Run(registrationForm);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Ошибка при запуске приложения: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                // Запуск основной формы
+                Application.Run(new RegistrationForm());
             }
-        }
-
-        private static IServiceCollection ConfigureServices()
-        {
-            var services = new ServiceCollection();
-
-            // добавление контекста базы данных
-            string connectionString = "Host=localhost;Port=5432;Database=vangog-db;User ID=postgres;Password=902692A2006UN951967;"; 
-            services.AddDbContextPool<VanGogDbContext>(options =>
+            catch (Exception ex)
             {
-                options.UseNpgsql(connectionString,
-                    opt => opt.EnableRetryOnFailure(
-                        maxRetryCount: 5,
-                        maxRetryDelay: TimeSpan.FromSeconds(15),
-                        errorCodesToAdd: null)
-                    .UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery));
-            },50);
-
-            // добавление логгера
-            services.AddLogging(logging =>
-            {
-                logging.AddConsole(); // логи в консоль
-                logging.SetMinimumLevel(LogLevel.Information); // уровень логирования
-            });
-
-            // регистрация формы и инициализатора
-            services.AddTransient<RegistrationForm>();
-            services.AddTransient<ApplicationInitializer>();
-
-            return services;
+                MessageBox.Show($"Ошибка при запуске приложения: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

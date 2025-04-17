@@ -104,8 +104,8 @@ namespace VanGog
                     Date = DateTime.UtcNow.AddDays(1),
                     Time = new TimeSpan(19, 0, 0),
                     Category = "Информация",
-                    Participants = "",
-                    ImagePath = ""
+                    Participants = string.Empty,
+                    ImagePath = string.Empty
                 }
             };
 
@@ -165,7 +165,7 @@ namespace VanGog
         private void OpenMyEventsForm()
         {
             // передаем список ID событий, на которые пользователь подписался
-            MyEventsForm nextPage = new MyEventsForm(subscribedEventIds);
+            var nextPage = new MyEventsForm(subscribedEventIds);
             nextPage.Size = this.Size;
             nextPage.WindowState = this.WindowState;
             nextPage.StartPosition = FormStartPosition.Manual;

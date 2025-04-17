@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace VanGog.Storage.Core.Entities;
 
@@ -16,10 +15,13 @@ public record Event
 
     public TimeSpan Time { get; set; }
 
-    public string Participants { get; set; }
+    public string Participants { get; set; } = string.Empty;
 
     public string Category { get; set; }
         
     // путь к изображению
     public string ImagePath { get; set; }
+
+    // ID создателя события (для идентификации созданных пользователем событий)
+    public string CreatorId { get; set; } = string.Empty;
 }

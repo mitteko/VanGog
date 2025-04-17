@@ -7,11 +7,15 @@ namespace VanGog
     public partial class MyEventsForm : Form
     {
         private readonly VanGogDbContext _dbContext;
-        private List<Event> _myEvents; // события
-        private List<int> _subscribedEventIds; // ID событий
-        private ContextMenuStrip _contextMenu;
+        private List<Event> _allEvents; // Все события из БД
+        private List<Event> _subscribedEvents; // События, на которые пользователь подписан
+        private List<Event> _createdEvents; // События, созданные пользователем
+        private List<int> _subscribedEventIds; // ID событий, на которые пользователь подписан
+        private ContextMenuStrip _subscribedContextMenu; // Контекстное меню для подписанных событий
+        private ContextMenuStrip _createdContextMenu; // Контекстное меню для созданных событий
         private Event _selectedEvent;
-        
+        private Panel _activePanel; // Текущая активная панель (для определения контекста)
+
         public event EventHandler<List<int>> ReturnToAnkets; // событие для возврата к форме анкет (чтоб синхронизировать события)
 
         public MyEventsForm(List<int> subscribedEventIds = null)
@@ -27,15 +31,25 @@ namespace VanGog
                 _subscribedEventIds = new List<int>();
             }
             LoadEvents();
-            SetupContextMenu();
+            SetupContextMenus();
         }
 
         private void LoadEvents()
         {
             try
             {
-                _myEvents = _dbContext.Events.ToList();
-                DisplayEvents();
+                // Загружаем все события из БД
+                _allEvents = _dbContext.Events.ToList();
+
+                // Фильтруем события, на которые пользователь подписан
+                _subscribedEvents = _allEvents.Where(e => _subscribedEventIds.Contains(e.EventId)).ToList();
+
+                // Фильтруем события, созданные пользователем
+                _createdEvents = _allEvents.Where(e => !string.IsNullOrEmpty(e.CreatorId) && e.CreatorId == Environment.MachineName).ToList();
+
+                // Отображаем события в соответствующих панелях
+                DisplaySubscribedEvents();
+                DisplayCreatedEvents();
             }
             catch (Exception ex)
             {
@@ -43,80 +57,149 @@ namespace VanGog
             }
         }
 
-        private void DisplayEvents()
+        private void SetupContextMenus()
         {
-            eventsListPanel.Controls.Clear();
+            // Меню для подписанных событий (только удаление из списка)
+            _subscribedContextMenu = new ContextMenuStrip();
+            _subscribedContextMenu.Items.Add("Удалить из списка", null, RemoveSubscribedEvent_Click);
 
-            if (_myEvents.Count == 0)
+            // Меню для созданных событий (изменение и удаление)
+            _createdContextMenu = new ContextMenuStrip();
+            _createdContextMenu.Items.Add("Изменить", null, EditCreatedEvent_Click);
+            _createdContextMenu.Items.Add("Удалить", null, DeleteCreatedEvent_Click);
+        }
+
+        private void DisplaySubscribedEvents()
+        {
+            subscribedEventsPanel.Controls.Clear();
+
+            if (_subscribedEvents.Count == 0)
             {
                 Label noEventsLabel = new Label
                 {
-                    Text = "У вас пока нет событий",
+                    Text = "У вас пока нет добавленных событий",
                     AutoSize = true,
-                    Font = new Font("Segoe UI", 12),
+                    Font = new Font("Segoe UI", 10),
                     ForeColor = Color.Gray,
                     Location = new Point(20, 20)
                 };
-                eventsListPanel.Controls.Add(noEventsLabel);
+                subscribedEventsPanel.Controls.Add(noEventsLabel);
                 return;
             }
 
             int yPos = 10;
-            foreach (var eventItem in _myEvents)
+            foreach (var eventItem in _subscribedEvents)
             {
-                Panel eventPanel = new Panel
-                {
-                    Width = eventsListPanel.Width - 40,
-                    Height = 50,
-                    BackColor = Color.FromArgb(220, 180, 200),
-                    Location = new Point(10, yPos)
-                };
-
-                Label eventLabel = new Label
-                {
-                    Text = $"• {eventItem.Date.ToShortDateString()} {eventItem.Time.ToString(@"hh\:mm")} ({eventItem.Title})",
-                    AutoSize = true,
-                    Font = new Font("Segoe UI", 10),
-                    Location = new Point(10, 15)
-                };
-
-                eventPanel.Controls.Add(eventLabel);
+                Panel eventPanel = CreateEventPanel(eventItem, subscribedEventsPanel.Width - 20);
+                eventPanel.Location = new Point(10, yPos);
                 eventPanel.Tag = eventItem;
-                eventPanel.Click += EventPanel_Click;
-                eventPanel.MouseDown += EventPanel_MouseDown;
+                eventPanel.Click += (s, e) => EventPanel_Click(s, e, subscribedEventsPanel);
+                eventPanel.MouseDown += (s, e) => EventPanel_MouseDown(s, e, _subscribedContextMenu);
 
-                eventsListPanel.Controls.Add(eventPanel);
+                subscribedEventsPanel.Controls.Add(eventPanel);
                 yPos += 60;
             }
         }
 
-        private void SetupContextMenu()
+        private void DisplayCreatedEvents()
         {
-            _contextMenu = new ContextMenuStrip();
-            _contextMenu.Items.Add("Изменить", null, EditEvent_Click);
-            _contextMenu.Items.Add("Удалить", null, DeleteEvent_Click);
+            createdEventsPanel.Controls.Clear();
+
+            if (_createdEvents.Count == 0)
+            {
+                Label noEventsLabel = new Label
+                {
+                    Text = "У вас пока нет созданных событий",
+                    AutoSize = true,
+                    Font = new Font("Segoe UI", 10),
+                    ForeColor = Color.Gray,
+                    Location = new Point(20, 20)
+                };
+                createdEventsPanel.Controls.Add(noEventsLabel);
+                return;
+            }
+
+            int yPos = 10;
+            foreach (var eventItem in _createdEvents)
+            {
+                Panel eventPanel = CreateEventPanel(eventItem, createdEventsPanel.Width - 20);
+                eventPanel.Location = new Point(10, yPos);
+                eventPanel.Tag = eventItem;
+                eventPanel.Click += (s, e) => EventPanel_Click(s, e, createdEventsPanel);
+                eventPanel.MouseDown += (s, e) => EventPanel_MouseDown(s, e, _createdContextMenu);
+
+                createdEventsPanel.Controls.Add(eventPanel);
+                yPos += 60;
+            }
         }
 
-        // щелчок ЛКМ
-        private void EventPanel_Click(object sender, EventArgs e)
+        private Panel CreateEventPanel(Event eventItem, int width)
+        {
+            Panel eventPanel = new Panel
+            {
+                Width = width,
+                Height = 50,
+                BackColor = Color.FromArgb(220, 180, 200),
+                Cursor = Cursors.Hand
+            };
+
+            Label eventLabel = new Label
+            {
+                Text = $"• {eventItem.Date.ToShortDateString()} {eventItem.Time.ToString(@"hh\:mm")} ({eventItem.Title})",
+                AutoSize = true,
+                Font = new Font("Segoe UI", 10),
+                Location = new Point(10, 15)
+            };
+
+            eventPanel.Controls.Add(eventLabel);
+            return eventPanel;
+        }
+
+        // Обработчик клика по панели события
+        private void EventPanel_Click(object sender, EventArgs e, Panel parentPanel)
         {
             Panel panel = (Panel)sender;
             _selectedEvent = (Event)panel.Tag;
+            _activePanel = parentPanel;
         }
 
-        // щелчок ПКМ
-        private void EventPanel_MouseDown(object sender, MouseEventArgs e)
+        // Обработчик правого клика для вызова контекстного меню
+        private void EventPanel_MouseDown(object sender, MouseEventArgs e, ContextMenuStrip contextMenu)
         {
             if (e.Button == MouseButtons.Right)
             {
                 Panel panel = (Panel)sender;
                 _selectedEvent = (Event)panel.Tag;
-                _contextMenu.Show(panel, e.Location);
+                contextMenu.Show(panel, e.Location);
             }
         }
 
-        // "Изменить" событие
-        private void EditEvent_Click(object sender, EventArgs e)
+        // Удаление события из списка подписанных
+        private void RemoveSubscribedEvent_Click(object sender, EventArgs e)
+        {
+            if (_selectedEvent != null)
+            {
+                var result = MessageBox.Show("Вы уверены, что хотите удалить это событие из списка добавленных?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        // Удаляем только из списка подписок, не из БД
+                        _subscribedEventIds.Remove(_selectedEvent.EventId);
+                        _subscribedEvents.Remove(_selectedEvent);
+                        DisplaySubscribedEvents();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка при удалении события: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        // Редактирование созданного события
+        private void EditCreatedEvent_Click(object sender, EventArgs e)
         {
             if (_selectedEvent != null)
             {
@@ -124,27 +207,35 @@ namespace VanGog
                 editForm.EventSaved += (s, args) =>
                 {
                     LoadEvents();
-                    ReturnToAnkets?.Invoke(this, _subscribedEventIds); // обновление анкеты (не обновляется нифига)
                 };
                 editForm.ShowDialog();
             }
         }
 
-        // "Удалить" событие
-        private void DeleteEvent_Click(object sender, EventArgs e)
+        // Удаление созданного события
+        private void DeleteCreatedEvent_Click(object sender, EventArgs e)
         {
             if (_selectedEvent != null)
             {
-                var result = MessageBox.Show("Вы уверены, что хотите удалить это событие?", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = MessageBox.Show("Вы уверены, что хотите удалить это событие? Это действие нельзя отменить.",
+                    "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (result == DialogResult.Yes)
                 {
                     try
                     {
-                        // удаление только из списка подписок, а не из базы данных (??? нужно ли из бд)
-                        _subscribedEventIds.Remove(_selectedEvent.EventId);
-                        _myEvents.Remove(_selectedEvent);
-                        DisplayEvents();
+                        // Удаляем из БД
+                        _dbContext.Events.Remove(_selectedEvent);
+                        _dbContext.SaveChanges();
+
+                        // Удаляем из списка подписок, если оно там есть
+                        if (_subscribedEventIds.Contains(_selectedEvent.EventId))
+                        {
+                            _subscribedEventIds.Remove(_selectedEvent.EventId);
+                        }
+
+                        // Обновляем списки и отображение
+                        LoadEvents();
                     }
                     catch (Exception ex)
                     {
@@ -183,17 +274,22 @@ namespace VanGog
         {
             switch (sortComboBox.SelectedIndex)
             {
-                case 0: // по дате (сначала новые)
-                    _myEvents = _myEvents.OrderByDescending(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
+                case 0: // По дате (сначала новые)
+                    _subscribedEvents = _subscribedEvents.OrderByDescending(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
+                    _createdEvents = _createdEvents.OrderByDescending(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
                     break;
-                case 1: // по дате (сначала старые)
-                    _myEvents = _myEvents.OrderBy(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
+                case 1: // По дате (сначала старые)
+                    _subscribedEvents = _subscribedEvents.OrderBy(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
+                    _createdEvents = _createdEvents.OrderBy(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
                     break;
-                case 2: // по названию
-                    _myEvents = _myEvents.OrderBy(ev => ev.Title).ToList();
+                case 2: // По названию
+                    _subscribedEvents = _subscribedEvents.OrderBy(ev => ev.Title).ToList();
+                    _createdEvents = _createdEvents.OrderBy(ev => ev.Title).ToList();
                     break;
             }
-            DisplayEvents();
+
+            DisplaySubscribedEvents();
+            DisplayCreatedEvents();
         }
 
         // переопределение крестика(закрытие)

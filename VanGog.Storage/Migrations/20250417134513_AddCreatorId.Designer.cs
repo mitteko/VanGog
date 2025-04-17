@@ -12,8 +12,8 @@ using VanGog.Storage;
 namespace VanGog.Storage.Migrations
 {
     [DbContext(typeof(VanGogDbContext))]
-    [Migration("20250406232854_Initial")]
-    partial class Initial
+    [Migration("20250417134513_AddCreatorId")]
+    partial class AddCreatorId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,10 @@ namespace VanGog.Storage.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("EventId"));
 
                     b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatorId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -61,7 +65,7 @@ namespace VanGog.Storage.Migrations
 
                     b.HasKey("EventId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", "public");
                 });
 #pragma warning restore 612, 618
         }

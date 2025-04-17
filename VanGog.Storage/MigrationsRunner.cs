@@ -1,28 +1,38 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace VanGog.Storage
 {
     public class MigrationsRunner
     {
-        public static async Task ApplyMigrations(ILogger logger, IServiceProvider serviceProvider)
+        public static void ApplyMigrations(VanGogDbContext dbContext)
         {
-            logger.LogInformation($"UpdateDatabase: starting...");
             try
             {
-                using (var serviceScope = serviceProvider.CreateScope())
+                // Проверяем, существует ли колонка CreatorId
+                bool creatorIdExists = false;
+                try
                 {
-                    var dbContext = serviceScope.ServiceProvider.GetRequiredService<VanGogDbContext>();
-                    await dbContext.Database.MigrateAsync();
+                    // Пробуем выполнить запрос, который использует CreatorId
+                    dbContext.Database.ExecuteSqlRaw("SELECT \"CreatorId\" FROM \"Events\" LIMIT 1");
+                    creatorIdExists = true;
                 }
-                
-                logger.LogInformation($"UpdateDatabase: successfully done");
-                await Task.FromResult(true);
+                catch
+                {
+                    creatorIdExists = false;
+                }
+
+                // Если колонка не существует, добавляем её
+                if (!creatorIdExists)
+                {
+                    dbContext.Database.ExecuteSqlRaw("ALTER TABLE \"Events\" ADD COLUMN \"CreatorId\" TEXT");
+                }
+
+                // Применяем все миграции
+                dbContext.Database.Migrate();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                logger.LogCritical(exception, $"UpdateDatabase: Migration failed");
+                // Просто пробрасываем исключение дальше
                 throw;
             }
         }

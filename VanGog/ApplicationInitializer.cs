@@ -3,18 +3,14 @@ using VanGog.Storage;
 
 namespace VanGog
 {
-    class ApplicationInitializer
+    public class ApplicationInitializer
     {
-        private readonly ILogger<ApplicationInitializer> _logger;
-
-        public ApplicationInitializer(ILogger<ApplicationInitializer> logger)
+        public void StartApplication()
         {
-            _logger = logger;
-        }
-
-        public void StartApplication(IServiceProvider serviceProvider)
-        {
-            MigrationsRunner.ApplyMigrations(_logger, serviceProvider);
+            using (var dbContext = new VanGogDbContext())
+            {
+                MigrationsRunner.ApplyMigrations(dbContext);
+            }
         }
     }
 }

@@ -31,11 +31,18 @@
             titleLabel = new Label();
             sortComboBox = new ComboBox();
             createEventButton = new LinkLabel();
-            eventsListPanel = new Panel();
             backToAnketsButton = new Button();
             sortLabel = new Label();
             backgroundPanel = new Panel();
+            subscribedEventsPanel = new Panel();
+            subscribedTitleLabel = new Label();
+            createdEventsPanel = new Panel();
+            createdTitleLabel = new Label();
+            eventsContainer = new Panel();
             backgroundPanel.SuspendLayout();
+            subscribedEventsPanel.SuspendLayout();
+            createdEventsPanel.SuspendLayout();
+            eventsContainer.SuspendLayout();
             SuspendLayout();
             // 
             // titleLabel
@@ -75,16 +82,6 @@
             createEventButton.Text = "Создать новое событие";
             createEventButton.LinkClicked += createEventButton_LinkClicked;
             // 
-            // eventsListPanel
-            // 
-            eventsListPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            eventsListPanel.AutoScroll = true;
-            eventsListPanel.BackColor = Color.FromArgb(230, 200, 220);
-            eventsListPanel.Location = new Point(20, 110);
-            eventsListPanel.Name = "eventsListPanel";
-            eventsListPanel.Size = new Size(959, 600);
-            eventsListPanel.TabIndex = 4;
-            // 
             // backToAnketsButton
             // 
             backToAnketsButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
@@ -120,15 +117,71 @@
             backgroundPanel.Size = new Size(999, 60);
             backgroundPanel.TabIndex = 6;
             // 
+            // subscribedEventsPanel
+            // 
+            subscribedEventsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            subscribedEventsPanel.AutoScroll = true;
+            subscribedEventsPanel.BackColor = Color.FromArgb(230, 200, 220);
+            subscribedEventsPanel.Controls.Add(subscribedTitleLabel);
+            subscribedEventsPanel.Location = new Point(10, 10);
+            subscribedEventsPanel.Name = "subscribedEventsPanel";
+            subscribedEventsPanel.Size = new Size(470, 580);
+            subscribedEventsPanel.TabIndex = 7;
+            // 
+            // subscribedTitleLabel
+            // 
+            subscribedTitleLabel.BackColor = Color.FromArgb(221, 196, 200);
+            subscribedTitleLabel.Dock = DockStyle.Top;
+            subscribedTitleLabel.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            subscribedTitleLabel.Location = new Point(0, 0);
+            subscribedTitleLabel.Name = "subscribedTitleLabel";
+            subscribedTitleLabel.Size = new Size(470, 38);
+            subscribedTitleLabel.TabIndex = 0;
+            subscribedTitleLabel.Text = "Добавленные события";
+            subscribedTitleLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // createdEventsPanel
+            // 
+            createdEventsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            createdEventsPanel.AutoScroll = true;
+            createdEventsPanel.BackColor = Color.FromArgb(230, 200, 220);
+            createdEventsPanel.Controls.Add(createdTitleLabel);
+            createdEventsPanel.Location = new Point(490, 10);
+            createdEventsPanel.Name = "createdEventsPanel";
+            createdEventsPanel.Size = new Size(470, 580);
+            createdEventsPanel.TabIndex = 8;
+            // 
+            // createdTitleLabel
+            // 
+            createdTitleLabel.BackColor = Color.FromArgb(221, 196, 200);
+            createdTitleLabel.Dock = DockStyle.Top;
+            createdTitleLabel.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            createdTitleLabel.Location = new Point(0, 0);
+            createdTitleLabel.Name = "createdTitleLabel";
+            createdTitleLabel.Size = new Size(470, 38);
+            createdTitleLabel.TabIndex = 1;
+            createdTitleLabel.Text = "Созданные события";
+            createdTitleLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // eventsContainer
+            // 
+            eventsContainer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            eventsContainer.Controls.Add(subscribedEventsPanel);
+            eventsContainer.Controls.Add(createdEventsPanel);
+            eventsContainer.Location = new Point(20, 110);
+            eventsContainer.Name = "eventsContainer";
+            eventsContainer.Size = new Size(970, 600);
+            eventsContainer.TabIndex = 9;
+            // 
             // MyEventsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(195, 149, 171);
             ClientSize = new Size(999, 786);
+            Controls.Add(eventsContainer);
             Controls.Add(backgroundPanel);
             Controls.Add(backToAnketsButton);
-            Controls.Add(eventsListPanel);
             Controls.Add(createEventButton);
             Controls.Add(sortComboBox);
             Controls.Add(sortLabel);
@@ -139,6 +192,9 @@
             Text = "Мои события";
             backgroundPanel.ResumeLayout(false);
             backgroundPanel.PerformLayout();
+            subscribedEventsPanel.ResumeLayout(false);
+            createdEventsPanel.ResumeLayout(false);
+            eventsContainer.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -149,8 +205,12 @@
         private Label sortLabel;
         private ComboBox sortComboBox;
         private LinkLabel createEventButton;
-        private Panel eventsListPanel;
         private Button backToAnketsButton;
         private Panel backgroundPanel;
+        private Panel subscribedEventsPanel;
+        private Label subscribedTitleLabel;
+        private Panel createdEventsPanel;
+        private Label createdTitleLabel;
+        private Panel eventsContainer;
     }
 }

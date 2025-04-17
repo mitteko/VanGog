@@ -34,6 +34,10 @@ namespace VanGog.Storage.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
@@ -58,7 +62,7 @@ namespace VanGog.Storage.Migrations
 
                     b.HasKey("EventId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", "public");
                 });
 #pragma warning restore 612, 618
         }
