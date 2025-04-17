@@ -7,14 +7,14 @@ namespace VanGog
     public partial class MyEventsForm : Form
     {
         private readonly VanGogDbContext _dbContext;
-        private List<Event> _allEvents; // Все события из БД
-        private List<Event> _subscribedEvents; // События, на которые пользователь подписан
-        private List<Event> _createdEvents; // События, созданные пользователем
+        private List<Event> _allEvents; // все события из БД
+        private List<Event> _subscribedEvents; // события, на которые пользователь подписан
+        private List<Event> _createdEvents; // события, созданные пользователем
         private List<int> _subscribedEventIds; // ID событий, на которые пользователь подписан
-        private ContextMenuStrip _subscribedContextMenu; // Контекстное меню для подписанных событий
-        private ContextMenuStrip _createdContextMenu; // Контекстное меню для созданных событий
+        private ContextMenuStrip _subscribedContextMenu; // контекстное меню для подписанных событий
+        private ContextMenuStrip _createdContextMenu; // контекстное меню для созданных событий
         private Event _selectedEvent;
-        private Panel _activePanel; // Текущая активная панель (для определения контекста)
+        private Panel _activePanel; // текущая активная панель (для определения контекста)
 
         public event EventHandler<List<int>> ReturnToAnkets; // событие для возврата к форме анкет (чтоб синхронизировать события)
 
@@ -38,16 +38,15 @@ namespace VanGog
         {
             try
             {
-                // Загружаем все события из БД
+                // загружаем все события из БД
                 _allEvents = _dbContext.Events.ToList();
 
-                // Фильтруем события, на которые пользователь подписан
+                // фильтруем события, на которые пользователь подписан
                 _subscribedEvents = _allEvents.Where(e => _subscribedEventIds.Contains(e.EventId)).ToList();
 
-                // Фильтруем события, созданные пользователем
+                // фильтруем события, созданные пользователем
                 _createdEvents = _allEvents.Where(e => !string.IsNullOrEmpty(e.CreatorId) && e.CreatorId == Environment.MachineName).ToList();
 
-                // Отображаем события в соответствующих панелях
                 DisplaySubscribedEvents();
                 DisplayCreatedEvents();
             }
@@ -59,11 +58,11 @@ namespace VanGog
 
         private void SetupContextMenus()
         {
-            // Меню для подписанных событий (только удаление из списка)
+            // меню для подписанных событий (только удаление из списка)
             _subscribedContextMenu = new ContextMenuStrip();
             _subscribedContextMenu.Items.Add("Удалить из списка", null, RemoveSubscribedEvent_Click);
 
-            // Меню для созданных событий (изменение и удаление)
+            // меню для созданных событий (изменение и удаление)
             _createdContextMenu = new ContextMenuStrip();
             _createdContextMenu.Items.Add("Изменить", null, EditCreatedEvent_Click);
             _createdContextMenu.Items.Add("Удалить", null, DeleteCreatedEvent_Click);
@@ -155,7 +154,7 @@ namespace VanGog
             return eventPanel;
         }
 
-        // Обработчик клика по панели события
+        // ЛКМ
         private void EventPanel_Click(object sender, EventArgs e, Panel parentPanel)
         {
             Panel panel = (Panel)sender;
@@ -163,7 +162,7 @@ namespace VanGog
             _activePanel = parentPanel;
         }
 
-        // Обработчик правого клика для вызова контекстного меню
+        // ПКМ
         private void EventPanel_MouseDown(object sender, MouseEventArgs e, ContextMenuStrip contextMenu)
         {
             if (e.Button == MouseButtons.Right)
@@ -174,7 +173,7 @@ namespace VanGog
             }
         }
 
-        // Удаление события из списка подписанных
+        // удаление события из списка подписанных
         private void RemoveSubscribedEvent_Click(object sender, EventArgs e)
         {
             if (_selectedEvent != null)
@@ -198,7 +197,7 @@ namespace VanGog
             }
         }
 
-        // Редактирование созданного события
+        // редактирование созданного события
         private void EditCreatedEvent_Click(object sender, EventArgs e)
         {
             if (_selectedEvent != null)
@@ -212,29 +211,27 @@ namespace VanGog
             }
         }
 
-        // Удаление созданного события
+        // удаление созданного события
         private void DeleteCreatedEvent_Click(object sender, EventArgs e)
         {
             if (_selectedEvent != null)
             {
-                var result = MessageBox.Show("Вы уверены, что хотите удалить это событие? Это действие нельзя отменить.",
-                    "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                var result = MessageBox.Show("Вы уверены, что хотите удалить это событие? Это действие нельзя отменить.", "Подтверждение удаления", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (result == DialogResult.Yes)
                 {
                     try
                     {
-                        // Удаляем из БД
+                        // удаляем из БД
                         _dbContext.Events.Remove(_selectedEvent);
                         _dbContext.SaveChanges();
 
-                        // Удаляем из списка подписок, если оно там есть
+                        // удаляем из списка подписок, если оно там есть
                         if (_subscribedEventIds.Contains(_selectedEvent.EventId))
                         {
                             _subscribedEventIds.Remove(_selectedEvent.EventId);
                         }
 
-                        // Обновляем списки и отображение
                         LoadEvents();
                     }
                     catch (Exception ex)
@@ -274,15 +271,15 @@ namespace VanGog
         {
             switch (sortComboBox.SelectedIndex)
             {
-                case 0: // По дате (сначала новые)
+                case 0: // по дате (сначала новые)
                     _subscribedEvents = _subscribedEvents.OrderByDescending(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
                     _createdEvents = _createdEvents.OrderByDescending(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
                     break;
-                case 1: // По дате (сначала старые)
+                case 1: // по дате (сначала старые)
                     _subscribedEvents = _subscribedEvents.OrderBy(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
                     _createdEvents = _createdEvents.OrderBy(ev => ev.Date).ThenBy(ev => ev.Time).ToList();
                     break;
-                case 2: // По названию
+                case 2: // по названию
                     _subscribedEvents = _subscribedEvents.OrderBy(ev => ev.Title).ToList();
                     _createdEvents = _createdEvents.OrderBy(ev => ev.Title).ToList();
                     break;

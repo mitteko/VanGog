@@ -6,7 +6,7 @@ namespace VanGog.Storage.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // Добавляем колонку CreatorId в таблицу Events
+            // колонка CreatorId в таблицу Events
             migrationBuilder.AddColumn<string>(
                 name: "CreatorId",
                 table: "Events",
@@ -16,7 +16,7 @@ namespace VanGog.Storage.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            // Удаляем колонку CreatorId из таблицы Events при откате миграции
+            // удаление при откате миграции
             migrationBuilder.DropColumn(
                 name: "CreatorId",
                 table: "Events");

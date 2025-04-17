@@ -16,11 +16,10 @@ namespace VanGog
 
             try
             {
-                // Инициализация приложения и применение миграций
+                // инициализация приложения и применение миграций
                 var initializer = new ApplicationInitializer();
                 initializer.StartApplication();
 
-                // Запуск основной формы
                 Application.Run(new RegistrationForm());
             }
             catch (Exception ex)

@@ -178,16 +178,14 @@ namespace VanGog
                 if (_isNewEvent)
                 {
                     eventItem = new Event();
-                    // Сохраняем ID пользователя, создавшего событие
-                    // В данном случае используем уникальный идентификатор компьютера
-                    eventItem.CreatorId = Environment.MachineName;
+                    eventItem.CreatorId = Environment.MachineName; // ID пользователя, создавшего событие (идентификатор компьютера)
                 }
                 else
                 {
                     eventItem = _eventToEdit;
                 }
 
-                // Сохраняем изображение в папку приложения
+                // сохр-e изображениz в папку приложения
                 string savedImagePath = SaveImageToAppFolder(_selectedImagePath);
 
                 eventItem.Title = titleTextBox.Text;

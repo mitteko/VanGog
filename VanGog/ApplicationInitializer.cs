@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using VanGog.Storage;
+﻿using VanGog.Storage;
 
 namespace VanGog
 {
