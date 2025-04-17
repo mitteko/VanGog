@@ -1,5 +1,6 @@
 ﻿using VanGog.Storage.Core.Entities;
 using VanGog.Storage;
+using System.Text.RegularExpressions;
 
 namespace VanGog
 {
@@ -139,6 +140,19 @@ namespace VanGog
         // сохр-е события
         private void saveButton_Click(object sender, EventArgs e)
         {
+            // установка свойств с перехватом ошибок
+            if (!Regex.IsMatch(titleTextBox.Text, "^[а-яА-Я]+$"))
+            {
+                MessageBox.Show("Название может содержать только русские буквы без пробелов.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (char.IsWhiteSpace(titleTextBox.Text[0]))
+            {
+                MessageBox.Show("Название не должно начинаться с пробела.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             // проверка заполнения обязательных полей
             if (string.IsNullOrWhiteSpace(titleTextBox.Text))
             {

@@ -9,16 +9,18 @@ public record Event
     [Key]
     private string title;
     private string category;
+
     public int EventId { get; set; }
+
     public string Title
     {
         get
         {
-            if (Regex.Match(title, "^[а-яА-Я]*$").Success)
+            if (Regex.Match(title, "^[а-яА-Я0-9]+$").Success)
             {
                 if (string.IsNullOrWhiteSpace(title))
                 {
-                    throw new ArgumentException("Название не может быть пустым или содержать только пробелы.");
+                    throw new ArgumentException("Название не может содержать фрактальные символы.");
                 }
 
                 if (char.IsWhiteSpace(title[0]))
@@ -37,15 +39,35 @@ public record Event
            title = value;
         }
     }
-public string Description { get; set; }
+
+    public string Description { get; set; }
 
     public DateTime Date { get; set; }
 
     public TimeSpan Time { get; set; }
 
-    public string Participants { get; set; } = string.Empty;
-
-    public string Category { get; set; }
+    public string Category
+    {
+        get
+        {
+            if (Regex.Match(category, "^[а-яА-Я]*$").Success)
+            {
+                if (string.IsNullOrWhiteSpace(category))
+                {
+                    throw new ArgumentException("Категория не может быть пустой или содержать только пробелы.");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Категория не может содержать специальные символы", nameof(Category));
+            }
+            return category;
+        }
+        set
+        {
+            category = value;
+        }
+    }
         
     // путь к изображению
     public string ImagePath { get; set; }
