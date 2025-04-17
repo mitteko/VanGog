@@ -1,7 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using VanGog.Storage;
 using VanGogRegistration;
 
 namespace VanGog

@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace VanGog
 {
+    /// <summary>
+    /// Класс для создания и редактирования события
+    /// </summary>
     public partial class CreateEventForm : Form
     {
         private readonly VanGogDbContext _dbContext;

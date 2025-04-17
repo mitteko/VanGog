@@ -1,9 +1,13 @@
 ﻿using System.Data;
 using VanGog.Storage.Core.Entities;
 using VanGog.Storage;
+using VanGog.Excel;
 
 namespace VanGog
 {
+    /// <summary>
+    /// Класс для отображения событий пользователя
+    /// </summary>
     public partial class MyEventsForm : Form
     {
         private readonly VanGogDbContext _dbContext;
@@ -298,6 +302,96 @@ namespace VanGog
             if (ReturnToAnkets != null && this.Visible)
             {
                 ReturnToAnkets(this, _subscribedEventIds);
+            }
+        }
+
+        // "Отчет"
+        private void reportButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // уникальный список категорий событий
+                var categories = _allEvents.Select(e => e.Category).Distinct().ToList();
+
+                // показать форму фильтрации
+                using (var filterForm = new EventFilterForm(categories))
+                {
+                    if (filterForm.ShowDialog() == DialogResult.OK)
+                    {
+                        // применить фильтры
+                        var filteredEvents = new List<Event>();
+
+                        // (подписанные / созданные)
+                        if (filterForm.IncludeSubscribed)
+                        {
+                            filteredEvents.AddRange(_subscribedEvents);
+                        }
+
+                        if (filterForm.IncludeCreated)
+                        {
+                            // добавляем те события, которых ещё нет в списке
+                            foreach (var evt in _createdEvents)
+                            {
+                                if (!filteredEvents.Any(e => e.EventId == evt.EventId))
+                                {
+                                    filteredEvents.Add(evt);
+                                }
+                            }
+                        }
+
+                        // фильтр по дате   
+                        if (filterForm.StartDate.HasValue && filterForm.EndDate.HasValue)
+                        {
+                            var startDate = filterForm.StartDate.Value.Date;
+                            var endDate = filterForm.EndDate.Value.Date.AddDays(1).AddSeconds(-1); // End of the day
+
+                            filteredEvents = filteredEvents.Where(e => e.Date >= startDate && e.Date <= endDate).ToList();
+                        }
+
+                        // по категории
+                        if (!string.IsNullOrEmpty(filterForm.Category))
+                        {
+                            filteredEvents = filteredEvents.Where(e => e.Category == filterForm.Category).ToList();
+                        }
+
+                        // если нет событий, соответствующих фильтрам
+                        if (filteredEvents.Count == 0)
+                        {
+                            MessageBox.Show("Нет событий, соответствующих выбранным фильтрам.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            return;
+                        }
+
+                        // диалоговое окно для сохранения файла
+                        using (var saveFileDialog = new SaveFileDialog())
+                        {
+                            saveFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx";
+                            saveFileDialog.Title = "Сохранить отчёт";
+                            saveFileDialog.FileName = "События_" + DateTime.Now.ToString("yyyy-MM-dd");
+
+                            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                            {
+                                // отправляем события в Excel
+                                ExcelExportHelper.ExportEventsToExcel(filteredEvents, saveFileDialog.FileName);
+
+                                MessageBox.Show($"Отчёт успешно сохранен в файл:\n{saveFileDialog.FileName}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                // открываем файл
+                                if (MessageBox.Show("Открыть созданный файл?", "Вопрос", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                                {
+                                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                                    {
+                                        FileName = saveFileDialog.FileName,
+                                        UseShellExecute = true
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при создании отчёта: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

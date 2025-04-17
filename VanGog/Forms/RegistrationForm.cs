@@ -2,6 +2,9 @@
 using VanGog.Storage;
 namespace VanGogRegistration
 {
+    /// <summary>
+    /// Класс формы регистрации
+    /// </summary>
     public partial class RegistrationForm : Form
     {
         private string selectedImagePath = string.Empty;

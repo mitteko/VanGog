@@ -2,6 +2,9 @@
 
 namespace VanGog.Storage
 {
+    /// <summary>
+    /// Класс для применения миграций к базе данных
+    /// </summary>
     public class MigrationsRunner
     {
         public static void ApplyMigrations(VanGogDbContext dbContext)

@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VanGog.Storage.Core.Entities;
 
-
 namespace VanGog.Storage
 {
+    /// <summary>
+    /// Класс для работы с базой данных
+    /// </summary>
     public class VanGogDbContext : DbContext
     {
         public DbSet<Event> Events { get; set; }

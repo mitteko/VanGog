@@ -3,7 +3,9 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace VanGog.Storage.Core.Entities;
-
+/// <summary>
+/// Класс для представления события
+/// </summary>
 public record Event
 {
     [Key]

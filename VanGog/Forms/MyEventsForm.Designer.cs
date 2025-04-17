@@ -3,14 +3,14 @@
     partial class MyEventsForm
     {
         /// <summary>
-        /// Required designer variable.
+        /// Обязательная переменная конструктора.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Clean up any resources being used.
+        /// Освободить все используемые ресурсы.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,11 +20,12 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+
+        #region Код, автоматически созданный конструктором форм Windows
 
         /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
+        /// Требуемый метод для поддержки конструктора — не изменяйте 
+        /// содержимое этого метода с помощью редактора кода.
         /// </summary>
         private void InitializeComponent()
         {
@@ -39,6 +40,7 @@
             createdEventsPanel = new Panel();
             createdTitleLabel = new Label();
             eventsContainer = new Panel();
+            reportButton = new Button();
             backgroundPanel.SuspendLayout();
             subscribedEventsPanel.SuspendLayout();
             createdEventsPanel.SuspendLayout();
@@ -173,12 +175,28 @@
             eventsContainer.Size = new Size(970, 600);
             eventsContainer.TabIndex = 9;
             // 
+            // reportButton
+            // 
+            reportButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            reportButton.BackColor = Color.FromArgb(169, 106, 132);
+            reportButton.FlatStyle = FlatStyle.Flat;
+            reportButton.Font = new Font("Segoe UI", 12F);
+            reportButton.ForeColor = Color.White;
+            reportButton.Location = new Point(780, 730);
+            reportButton.Name = "reportButton";
+            reportButton.Size = new Size(200, 40);
+            reportButton.TabIndex = 10;
+            reportButton.Text = "Отчёт";
+            reportButton.UseVisualStyleBackColor = false;
+            reportButton.Click += reportButton_Click;
+            // 
             // MyEventsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(195, 149, 171);
             ClientSize = new Size(999, 786);
+            Controls.Add(reportButton);
             Controls.Add(eventsContainer);
             Controls.Add(backgroundPanel);
             Controls.Add(backToAnketsButton);
@@ -212,5 +230,6 @@
         private Panel createdEventsPanel;
         private Label createdTitleLabel;
         private Panel eventsContainer;
+        private Button reportButton;
     }
 }

@@ -3,6 +3,9 @@ using VanGog.Storage.Core.Entities;
 
 namespace VanGog
 {
+    /// <summary>
+    /// Класс для просмотра анкет
+    /// </summary>
     public partial class AnketsForm : Form
     {
         // список событий для просмотра
@@ -25,11 +28,6 @@ namespace VanGog
         {
             try
             {
-                if (_dbContext == null)
-                {
-                    _dbContext = new VanGogDbContext();
-                }
-
                 events = _dbContext.Events.ToList();
 
                 if (events.Count == 0)
