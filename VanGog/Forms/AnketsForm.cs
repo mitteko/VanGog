@@ -1,4 +1,5 @@
-﻿using VanGog.Storage;
+﻿using Microsoft.EntityFrameworkCore;
+using VanGog.Storage;
 using VanGog.Storage.Core.Entities;
 
 namespace VanGog
@@ -28,7 +29,18 @@ namespace VanGog
         {
             try
             {
-                events = _dbContext.Events.ToList();
+                if (_dbContext == null)
+                {
+                    _dbContext = new VanGogDbContext();
+                }
+                else
+                {
+                    // очищаем контекст перед загрузкой обновленных данных, чтобы не было конфликтов при повторной загрузке
+                    _dbContext.ChangeTracker.Clear();
+                }
+
+                // загружаем события с отключенным отслеживанием изменений, тк в этом нет необходимости (в анкетах)
+                events = _dbContext.Events.AsNoTracking().ToList();
 
                 if (events.Count == 0)
                 {

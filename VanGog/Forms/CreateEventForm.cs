@@ -185,7 +185,13 @@ namespace VanGog
                 }
                 else
                 {
-                    eventItem = _eventToEdit;
+                    eventItem = _dbContext.Events.Find(_eventToEdit.EventId);
+
+                    if (eventItem == null)
+                    {
+                        MessageBox.Show("Событие не найдено в базе данных.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                 }
 
                 // сохр-e изображениz в папку приложения
@@ -201,6 +207,11 @@ namespace VanGog
                 if (_isNewEvent)
                 {
                     _dbContext.Events.Add(eventItem); // добавляем новое событие в бд
+                }
+                else
+                {
+                    // указываем ЯВНО, что сущность изменена
+                    _dbContext.Entry(eventItem).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 }
 
                 _dbContext.SaveChanges();

@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using System.Windows.Forms;
-using VanGog;
-using VanGog.Storage.Core.Entities;
+﻿using VanGog.Storage.Core.Entities;
 
 namespace TestVanGog
 {
