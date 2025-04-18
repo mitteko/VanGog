@@ -217,6 +217,8 @@ namespace VanGog
                 _dbContext.SaveChanges();
                 EventSaved?.Invoke(this, EventArgs.Empty); // вызываем событие о сохранении
 
+                MessageBox.Show($"Вы создали быстрое свидание '{eventItem.Title}' на '{eventItem.Date}'!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 this.Close();
             }
             catch (Exception ex)
